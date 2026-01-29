@@ -1,0 +1,43 @@
+emailIdp:
+  - login:
+  - startRegistration:
+  - verifyRegistrationCode:
+  - finishRegistration:
+  - startPasswordReset:
+  - verifyPasswordResetCode:
+  - finishPasswordReset:
+jwtRefresh:
+  - refreshAccessToken:
+chat:
+  - sendMessage:
+  - getChatHistory:
+  - clearChatHistory:
+  - getQuickSuggestions:
+dashboard:
+  - getDashboardData:
+insight:
+  - getInsights:
+  - createInsight:
+  - dismissInsight:
+  - generateInsights:
+  - getActiveInsightCount:
+task:
+  - createTask:
+  - getTasks:
+  - getTasksByStatus:
+  - getTodaysTasks:
+  - getOverdueTasks:
+  - getUpcomingTasks:
+  - updateTask:
+  - completeTask:
+  - deleteTask:
+  - getTaskCount:
+user:
+  - createOrUpdateUser:
+  - getUserByEmail:
+  - getUserById:
+  - updateLastActive:
+  - updatePreferences:
+  - updateAvatar:
+greeting:
+  - hello:

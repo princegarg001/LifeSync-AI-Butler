@@ -48,7 +48,7 @@ app.*.map.json
 # Generated files
 *.g.dart
 *.freezed.dart
-my_project_server/lib/src/generated/
+# Note: my_project_server/lib/src/generated/ is tracked for CI builds
 
 # Docker
 *.log

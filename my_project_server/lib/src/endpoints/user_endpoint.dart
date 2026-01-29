@@ -59,9 +59,12 @@ class UserEndpoint extends Endpoint {
       throw Exception('User not found');
     }
 
-    if (timezone != null) user.timezone = timezone;
-    if (notificationsEnabled != null)
+    if (timezone != null) {
+      user.timezone = timezone;
+    }
+    if (notificationsEnabled != null) {
       user.notificationsEnabled = notificationsEnabled;
+    }
 
     return await User.db.updateRow(session, user);
   }
