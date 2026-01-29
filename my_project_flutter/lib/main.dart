@@ -50,13 +50,13 @@ class AuthWrapper extends StatefulWidget {
 
 class _AuthWrapperState extends State<AuthWrapper> {
   AuthScreen _currentScreen = AuthScreen.signUp;
-  
+
   @override
   void initState() {
     super.initState();
     _checkAuthStatus();
   }
-  
+
   Future<void> _checkAuthStatus() async {
     final isAuthenticated = await AuthService.instance.checkAuthStatus();
     if (isAuthenticated && mounted) {
@@ -65,19 +65,19 @@ class _AuthWrapperState extends State<AuthWrapper> {
       });
     }
   }
-  
+
   void _navigateToSignIn() {
     setState(() => _currentScreen = AuthScreen.signIn);
   }
-  
+
   void _navigateToSignUp() {
     setState(() => _currentScreen = AuthScreen.signUp);
   }
-  
+
   void _onSignUpSuccess() {
     // After sign up, go to sign in
     setState(() => _currentScreen = AuthScreen.signIn);
-    
+
     // Show success message
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -88,11 +88,11 @@ class _AuthWrapperState extends State<AuthWrapper> {
       ),
     );
   }
-  
+
   void _onSignInSuccess() {
     setState(() => _currentScreen = AuthScreen.main);
   }
-  
+
   void _onSignOut() {
     AuthService.instance.signOut();
     setState(() => _currentScreen = AuthScreen.signUp);
@@ -122,7 +122,7 @@ enum AuthScreen { signUp, signIn, main }
 /// Main navigation with bottom nav bar
 class MainNavigationScreen extends StatefulWidget {
   final VoidCallback onSignOut;
-  
+
   const MainNavigationScreen({super.key, required this.onSignOut});
 
   @override
@@ -131,7 +131,7 @@ class MainNavigationScreen extends StatefulWidget {
 
 class _MainNavigationScreenState extends State<MainNavigationScreen> {
   int _currentIndex = 0;
-  
+
   int get _userId => AuthService.instance.currentUser?.id ?? 1;
 
   @override
@@ -176,14 +176,18 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
             PageRouteBuilder(
               pageBuilder: (context, animation, secondaryAnimation) =>
                   VoiceButlerScreen(userId: _userId),
-              transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                return ScaleTransition(
-                  scale: Tween<double>(begin: 0.8, end: 1.0).animate(
-                    CurvedAnimation(parent: animation, curve: Curves.easeOutBack),
-                  ),
-                  child: FadeTransition(opacity: animation, child: child),
-                );
-              },
+              transitionsBuilder:
+                  (context, animation, secondaryAnimation, child) {
+                    return ScaleTransition(
+                      scale: Tween<double>(begin: 0.8, end: 1.0).animate(
+                        CurvedAnimation(
+                          parent: animation,
+                          curve: Curves.easeOutBack,
+                        ),
+                      ),
+                      child: FadeTransition(opacity: animation, child: child),
+                    );
+                  },
               transitionDuration: const Duration(milliseconds: 400),
             ),
           );
@@ -207,10 +211,30 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              _buildNavItem(0, Icons.dashboard_outlined, Icons.dashboard, 'Home'),
-              _buildNavItem(1, Icons.task_alt_outlined, Icons.task_alt, 'Tasks'),
-              _buildNavItem(2, Icons.chat_bubble_outline, Icons.chat_bubble, 'Chat'),
-              _buildNavItem(3, Icons.insights_outlined, Icons.insights, 'Insights'),
+              _buildNavItem(
+                0,
+                Icons.dashboard_outlined,
+                Icons.dashboard,
+                'Home',
+              ),
+              _buildNavItem(
+                1,
+                Icons.task_alt_outlined,
+                Icons.task_alt,
+                'Tasks',
+              ),
+              _buildNavItem(
+                2,
+                Icons.chat_bubble_outline,
+                Icons.chat_bubble,
+                'Chat',
+              ),
+              _buildNavItem(
+                3,
+                Icons.insights_outlined,
+                Icons.insights,
+                'Insights',
+              ),
               _buildProfileItem(),
             ],
           ),
@@ -219,7 +243,12 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     );
   }
 
-  Widget _buildNavItem(int index, IconData icon, IconData activeIcon, String label) {
+  Widget _buildNavItem(
+    int index,
+    IconData icon,
+    IconData activeIcon,
+    String label,
+  ) {
     final isSelected = _currentIndex == index;
     return GestureDetector(
       onTap: () => setState(() => _currentIndex = index),
@@ -227,7 +256,9 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.primary.withValues(alpha: 0.15) : Colors.transparent,
+          color: isSelected
+              ? AppColors.primary.withValues(alpha: 0.15)
+              : Colors.transparent,
           borderRadius: BorderRadius.circular(12),
         ),
         child: Column(
@@ -255,7 +286,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
 
   Widget _buildProfileItem() {
     final user = AuthService.instance.currentUser;
-    
+
     return GestureDetector(
       onTap: () {
         Navigator.of(context).push(

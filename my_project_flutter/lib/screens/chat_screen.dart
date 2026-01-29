@@ -6,7 +6,7 @@ import '../services/api_service.dart';
 /// AI Chat Screen with premium messaging UI
 class ChatScreen extends StatefulWidget {
   final int userId;
-  
+
   const ChatScreen({super.key, required this.userId});
 
   @override
@@ -24,14 +24,17 @@ class _ChatScreenState extends State<ChatScreen> {
   void initState() {
     super.initState();
     // Add welcome message
-    _messages.add(ChatMessageUI(
-      text: "Hello! I'm your LifeSync Butler 🤖\n\nI can help you manage tasks, check your schedule, and provide productivity insights. What can I do for you today?",
-      isUser: false,
-      timestamp: DateTime.now(),
-    ));
+    _messages.add(
+      ChatMessageUI(
+        text:
+            "Hello! I'm your LifeSync Butler 🤖\n\nI can help you manage tasks, check your schedule, and provide productivity insights. What can I do for you today?",
+        isUser: false,
+        timestamp: DateTime.now(),
+      ),
+    );
     _loadChatHistory();
   }
-  
+
   Future<void> _loadChatHistory() async {
     try {
       final history = await _api.getChatHistory(widget.userId, limit: 20);
@@ -39,11 +42,13 @@ class _ChatScreenState extends State<ChatScreen> {
         setState(() {
           _messages.clear();
           for (final msg in history) {
-            _messages.add(ChatMessageUI(
-              text: msg.content,
-              isUser: msg.role == 'user',
-              timestamp: msg.timestamp,
-            ));
+            _messages.add(
+              ChatMessageUI(
+                text: msg.content,
+                isUser: msg.role == 'user',
+                timestamp: msg.timestamp,
+              ),
+            );
           }
         });
       }
@@ -68,10 +73,10 @@ class _ChatScreenState extends State<ChatScreen> {
               Expanded(
                 child: _buildMessagesList(),
               ),
-              
+
               // Quick suggestions
               if (_messages.length < 3) _buildQuickSuggestions(),
-              
+
               // Input area
               _buildInputArea(),
             ],
@@ -93,7 +98,11 @@ class _ChatScreenState extends State<ChatScreen> {
               gradient: AppGradients.primaryGradient,
               borderRadius: BorderRadius.circular(12),
             ),
-            child: const Icon(Icons.auto_awesome, size: 20, color: Colors.white),
+            child: const Icon(
+              Icons.auto_awesome,
+              size: 20,
+              color: Colors.white,
+            ),
           ),
           const SizedBox(width: 12),
           const Column(
@@ -127,7 +136,7 @@ class _ChatScreenState extends State<ChatScreen> {
       ],
     );
   }
-  
+
   Future<void> _clearHistory() async {
     try {
       await _api.clearChatHistory(widget.userId);
@@ -136,11 +145,13 @@ class _ChatScreenState extends State<ChatScreen> {
     }
     setState(() {
       _messages.clear();
-      _messages.add(ChatMessageUI(
-        text: "Chat history cleared! How can I help you today?",
-        isUser: false,
-        timestamp: DateTime.now(),
-      ));
+      _messages.add(
+        ChatMessageUI(
+          text: "Chat history cleared! How can I help you today?",
+          isUser: false,
+          timestamp: DateTime.now(),
+        ),
+      );
     });
   }
 
@@ -160,69 +171,76 @@ class _ChatScreenState extends State<ChatScreen> {
 
   Widget _buildMessageBubble(ChatMessageUI message, int index) {
     final isUser = message.isUser;
-    
+
     return Padding(
-      padding: const EdgeInsets.only(bottom: 16),
-      child: Row(
-        mainAxisAlignment: isUser ? MainAxisAlignment.end : MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          if (!isUser) ...[
-            // AI Avatar
-            Container(
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                gradient: AppGradients.primaryGradient,
-                borderRadius: BorderRadius.circular(14),
-              ),
-              child: const Icon(
-                Icons.auto_awesome,
-                size: 18,
-                color: Colors.white,
-              ),
-            ),
-            const SizedBox(width: 12),
-          ],
-          
-          // Message bubble
-          Flexible(
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
-              decoration: BoxDecoration(
-                gradient: isUser ? AppGradients.primaryGradient : null,
-                color: isUser ? null : AppColors.surface,
-                borderRadius: BorderRadius.only(
-                  topLeft: const Radius.circular(20),
-                  topRight: const Radius.circular(20),
-                  bottomLeft: Radius.circular(isUser ? 20 : 6),
-                  bottomRight: Radius.circular(isUser ? 6 : 20),
-                ),
-                border: isUser ? null : Border.all(color: AppColors.glassBorder),
-                boxShadow: [
-                  BoxShadow(
-                    color: isUser
-                        ? AppColors.primary.withValues(alpha: 0.3)
-                        : Colors.black.withValues(alpha: 0.1),
-                    blurRadius: 12,
-                    offset: const Offset(0, 4),
+          padding: const EdgeInsets.only(bottom: 16),
+          child: Row(
+            mainAxisAlignment: isUser
+                ? MainAxisAlignment.end
+                : MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              if (!isUser) ...[
+                // AI Avatar
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    gradient: AppGradients.primaryGradient,
+                    borderRadius: BorderRadius.circular(14),
                   ),
-                ],
-              ),
-              child: Text(
-                message.text,
-                style: TextStyle(
-                  fontSize: 15,
-                  color: isUser ? Colors.white : AppColors.textPrimary,
-                  height: 1.4,
+                  child: const Icon(
+                    Icons.auto_awesome,
+                    size: 18,
+                    color: Colors.white,
+                  ),
+                ),
+                const SizedBox(width: 12),
+              ],
+
+              // Message bubble
+              Flexible(
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 18,
+                    vertical: 14,
+                  ),
+                  decoration: BoxDecoration(
+                    gradient: isUser ? AppGradients.primaryGradient : null,
+                    color: isUser ? null : AppColors.surface,
+                    borderRadius: BorderRadius.only(
+                      topLeft: const Radius.circular(20),
+                      topRight: const Radius.circular(20),
+                      bottomLeft: Radius.circular(isUser ? 20 : 6),
+                      bottomRight: Radius.circular(isUser ? 6 : 20),
+                    ),
+                    border: isUser
+                        ? null
+                        : Border.all(color: AppColors.glassBorder),
+                    boxShadow: [
+                      BoxShadow(
+                        color: isUser
+                            ? AppColors.primary.withValues(alpha: 0.3)
+                            : Colors.black.withValues(alpha: 0.1),
+                        blurRadius: 12,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: Text(
+                    message.text,
+                    style: TextStyle(
+                      fontSize: 15,
+                      color: isUser ? Colors.white : AppColors.textPrimary,
+                      height: 1.4,
+                    ),
+                  ),
                 ),
               ),
-            ),
+
+              if (isUser) const SizedBox(width: 8),
+            ],
           ),
-          
-          if (isUser) const SizedBox(width: 8),
-        ],
-      ),
-    )
+        )
         .animate()
         .fadeIn(duration: 300.ms)
         .slideX(
@@ -261,38 +279,37 @@ class _ChatScreenState extends State<ChatScreen> {
               mainAxisSize: MainAxisSize.min,
               children: List.generate(
                 3,
-                (index) => Container(
-                  width: 8,
-                  height: 8,
-                  margin: const EdgeInsets.symmetric(horizontal: 3),
-                  decoration: const BoxDecoration(
-                    color: AppColors.primary,
-                    shape: BoxShape.circle,
-                  ),
-                )
-                    .animate(
-                      onComplete: (c) => c.repeat(),
-                    )
-                    .scale(
-                      delay: Duration(milliseconds: index * 150),
-                      duration: 600.ms,
-                      begin: const Offset(0.8, 0.8),
-                      end: const Offset(1.2, 1.2),
-                    )
-                    .then()
-                    .scale(
-                      duration: 600.ms,
-                      begin: const Offset(1.2, 1.2),
-                      end: const Offset(0.8, 0.8),
-                    ),
+                (index) =>
+                    Container(
+                          width: 8,
+                          height: 8,
+                          margin: const EdgeInsets.symmetric(horizontal: 3),
+                          decoration: const BoxDecoration(
+                            color: AppColors.primary,
+                            shape: BoxShape.circle,
+                          ),
+                        )
+                        .animate(
+                          onComplete: (c) => c.repeat(),
+                        )
+                        .scale(
+                          delay: Duration(milliseconds: index * 150),
+                          duration: 600.ms,
+                          begin: const Offset(0.8, 0.8),
+                          end: const Offset(1.2, 1.2),
+                        )
+                        .then()
+                        .scale(
+                          duration: 600.ms,
+                          begin: const Offset(1.2, 1.2),
+                          end: const Offset(0.8, 0.8),
+                        ),
               ),
             ),
           ),
         ],
       ),
-    )
-        .animate()
-        .fadeIn(duration: 300.ms);
+    ).animate().fadeIn(duration: 300.ms);
   }
 
   Widget _buildQuickSuggestions() {
@@ -301,7 +318,7 @@ class _ChatScreenState extends State<ChatScreen> {
       '📅 Show my schedule',
       '💡 Give me insights',
     ];
-    
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       child: SingleChildScrollView(
@@ -310,32 +327,36 @@ class _ChatScreenState extends State<ChatScreen> {
           children: suggestions.asMap().entries.map((entry) {
             final index = entry.key;
             final suggestion = entry.value;
-            
+
             return Padding(
-              padding: const EdgeInsets.only(right: 10),
-              child: Material(
-                color: AppColors.surfaceLight,
-                borderRadius: BorderRadius.circular(20),
-                child: InkWell(
-                  onTap: () => _sendMessage(suggestion.split(' ').skip(1).join(' ')),
-                  borderRadius: BorderRadius.circular(20),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                    decoration: BoxDecoration(
+                  padding: const EdgeInsets.only(right: 10),
+                  child: Material(
+                    color: AppColors.surfaceLight,
+                    borderRadius: BorderRadius.circular(20),
+                    child: InkWell(
+                      onTap: () =>
+                          _sendMessage(suggestion.split(' ').skip(1).join(' ')),
                       borderRadius: BorderRadius.circular(20),
-                      border: Border.all(color: AppColors.glassBorder),
-                    ),
-                    child: Text(
-                      suggestion,
-                      style: const TextStyle(
-                        fontSize: 14,
-                        color: AppColors.textPrimary,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 10,
+                        ),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          border: Border.all(color: AppColors.glassBorder),
+                        ),
+                        child: Text(
+                          suggestion,
+                          style: const TextStyle(
+                            fontSize: 14,
+                            color: AppColors.textPrimary,
+                          ),
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ),
-            )
+                )
                 .animate()
                 .fadeIn(delay: Duration(milliseconds: 100 + index * 100))
                 .slideY(begin: 0.2, end: 0);
@@ -366,7 +387,7 @@ class _ChatScreenState extends State<ChatScreen> {
             ),
           ),
           const SizedBox(width: 12),
-          
+
           // Text input
           Expanded(
             child: Container(
@@ -392,7 +413,7 @@ class _ChatScreenState extends State<ChatScreen> {
             ),
           ),
           const SizedBox(width: 12),
-          
+
           // Send button
           Container(
             decoration: BoxDecoration(
@@ -418,31 +439,35 @@ class _ChatScreenState extends State<ChatScreen> {
 
   void _sendMessage(String text) async {
     if (text.trim().isEmpty) return;
-    
+
     setState(() {
-      _messages.add(ChatMessageUI(
-        text: text,
-        isUser: true,
-        timestamp: DateTime.now(),
-      ));
+      _messages.add(
+        ChatMessageUI(
+          text: text,
+          isUser: true,
+          timestamp: DateTime.now(),
+        ),
+      );
       _messageController.clear();
       _isTyping = true;
     });
-    
+
     // Scroll to bottom
     _scrollToBottom();
-    
+
     // Try to get real AI response, fall back to mock
     try {
       final response = await _api.sendMessage(widget.userId, text);
       if (mounted) {
         setState(() {
           _isTyping = false;
-          _messages.add(ChatMessageUI(
-            text: response.message,
-            isUser: false,
-            timestamp: DateTime.now(),
-          ));
+          _messages.add(
+            ChatMessageUI(
+              text: response.message,
+              isUser: false,
+              timestamp: DateTime.now(),
+            ),
+          );
         });
         _scrollToBottom();
       }
@@ -452,17 +477,19 @@ class _ChatScreenState extends State<ChatScreen> {
       if (mounted) {
         setState(() {
           _isTyping = false;
-          _messages.add(ChatMessageUI(
-            text: _getMockResponse(text),
-            isUser: false,
-            timestamp: DateTime.now(),
-          ));
+          _messages.add(
+            ChatMessageUI(
+              text: _getMockResponse(text),
+              isUser: false,
+              timestamp: DateTime.now(),
+            ),
+          );
         });
         _scrollToBottom();
       }
     }
   }
-  
+
   void _scrollToBottom() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (_scrollController.hasClients) {
@@ -477,19 +504,21 @@ class _ChatScreenState extends State<ChatScreen> {
 
   String _getMockResponse(String input) {
     final lower = input.toLowerCase();
-    
-    if (lower.contains('create') || lower.contains('task') || lower.contains('remind')) {
+
+    if (lower.contains('create') ||
+        lower.contains('task') ||
+        lower.contains('remind')) {
       return "✅ I've created a new task for you!\n\nTask: \"${input.replaceFirst(RegExp(r'create|add|remind me to', caseSensitive: false), '').trim()}\"\nPriority: Medium\nDue: Today\n\nWould you like to set a specific time or priority?";
     }
-    
+
     if (lower.contains('schedule') || lower.contains('today')) {
       return "📅 Here's your schedule for today:\n\n• 9:00 AM - Team standup\n• 11:00 AM - Client call\n• 2:00 PM - Project review\n• 4:00 PM - Code review\n\nYou have 4 tasks remaining. Need help prioritizing?";
     }
-    
+
     if (lower.contains('insight') || lower.contains('productivity')) {
       return "📊 Here are your insights:\n\n🔥 You've completed 23% more tasks this week!\n⏰ Your most productive hours are 9-11 AM\n📈 Task completion rate: 87%\n\nKeep up the amazing work! Would you like tips to improve further?";
     }
-    
+
     return "I understand you want help with \"$input\". I can:\n\n• Create and manage tasks\n• Show your schedule\n• Provide productivity insights\n\nWhat would you like me to do?";
   }
 

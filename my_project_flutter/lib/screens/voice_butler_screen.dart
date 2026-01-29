@@ -8,7 +8,7 @@ import '../services/api_service.dart';
 /// AI Voice Butler - Hackathon-winning voice assistant feature
 class VoiceButlerScreen extends StatefulWidget {
   final int userId;
-  
+
   const VoiceButlerScreen({super.key, required this.userId});
 
   @override
@@ -18,17 +18,17 @@ class VoiceButlerScreen extends StatefulWidget {
 class _VoiceButlerScreenState extends State<VoiceButlerScreen>
     with TickerProviderStateMixin {
   final ApiService _api = ApiService.instance;
-  
+
   bool _isListening = false;
   bool _isProcessing = false;
   bool _isSpeaking = false;
   String _transcribedText = '';
   String _aiResponse = '';
   String _currentAction = '';
-  
+
   late AnimationController _pulseController;
   late AnimationController _waveController;
-  
+
   @override
   void initState() {
     super.initState();
@@ -36,13 +36,13 @@ class _VoiceButlerScreenState extends State<VoiceButlerScreen>
       vsync: this,
       duration: const Duration(milliseconds: 1500),
     )..repeat(reverse: true);
-    
+
     _waveController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 800),
     )..repeat();
   }
-  
+
   @override
   void dispose() {
     _pulseController.dispose();
@@ -62,15 +62,15 @@ class _VoiceButlerScreenState extends State<VoiceButlerScreen>
             children: [
               // Header
               _buildHeader(),
-              
+
               // Main voice interface
               Expanded(
                 child: _buildVoiceInterface(),
               ),
-              
+
               // Quick command suggestions
               _buildQuickCommands(),
-              
+
               // Bottom controls
               _buildBottomControls(),
             ],
@@ -86,7 +86,10 @@ class _VoiceButlerScreenState extends State<VoiceButlerScreen>
       child: Row(
         children: [
           IconButton(
-            icon: const Icon(Icons.arrow_back_ios, color: AppColors.textPrimary),
+            icon: const Icon(
+              Icons.arrow_back_ios,
+              color: AppColors.textPrimary,
+            ),
             onPressed: () => Navigator.pop(context),
           ),
           const Expanded(
@@ -135,14 +138,14 @@ class _VoiceButlerScreenState extends State<VoiceButlerScreen>
         children: [
           // Voice visualizer orb
           _buildVoiceOrb(),
-          
+
           const SizedBox(height: 40),
-          
+
           // Status text
           _buildStatusText(),
-          
+
           const SizedBox(height: 24),
-          
+
           // Transcribed text or AI response
           if (_transcribedText.isNotEmpty || _aiResponse.isNotEmpty)
             _buildResponseCard(),
@@ -160,34 +163,39 @@ class _VoiceButlerScreenState extends State<VoiceButlerScreen>
         animation: _pulseController,
         builder: (context, child) {
           return Container(
-            width: 200,
-            height: 200,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              gradient: _isListening
-                  ? AppGradients.accentGradient
-                  : AppGradients.primaryGradient,
-              boxShadow: [
-                BoxShadow(
-                  color: (_isListening ? AppColors.accent : AppColors.primary)
-                      .withValues(alpha: 0.3 + (_pulseController.value * 0.3)),
-                  blurRadius: 30 + (_pulseController.value * 20),
-                  spreadRadius: _isListening ? 10 + (_pulseController.value * 10) : 5,
+                width: 200,
+                height: 200,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: _isListening
+                      ? AppGradients.accentGradient
+                      : AppGradients.primaryGradient,
+                  boxShadow: [
+                    BoxShadow(
+                      color:
+                          (_isListening ? AppColors.accent : AppColors.primary)
+                              .withValues(
+                                alpha: 0.3 + (_pulseController.value * 0.3),
+                              ),
+                      blurRadius: 30 + (_pulseController.value * 20),
+                      spreadRadius: _isListening
+                          ? 10 + (_pulseController.value * 10)
+                          : 5,
+                    ),
+                  ],
                 ),
-              ],
-            ),
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                // Animated rings
-                if (_isListening) ..._buildAnimatedRings(),
-                
-                // Center icon
-                AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 200),
-                  child: _isListening
-                      ? _buildWaveform()
-                      : _isProcessing
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    // Animated rings
+                    if (_isListening) ..._buildAnimatedRings(),
+
+                    // Center icon
+                    AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 200),
+                      child: _isListening
+                          ? _buildWaveform()
+                          : _isProcessing
                           ? const CircularProgressIndicator(
                               color: Colors.white,
                               strokeWidth: 3,
@@ -198,10 +206,10 @@ class _VoiceButlerScreenState extends State<VoiceButlerScreen>
                               color: Colors.white,
                               key: ValueKey(_isSpeaking),
                             ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          )
+              )
               .animate(target: _isListening ? 1 : 0)
               .scale(
                 begin: const Offset(1, 1),
@@ -225,7 +233,9 @@ class _VoiceButlerScreenState extends State<VoiceButlerScreen>
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               border: Border.all(
-                color: AppColors.accent.withValues(alpha: 0.5 - (progress * 0.5)),
+                color: AppColors.accent.withValues(
+                  alpha: 0.5 - (progress * 0.5),
+                ),
                 width: 2,
               ),
             ),
@@ -243,7 +253,9 @@ class _VoiceButlerScreenState extends State<VoiceButlerScreen>
         return AnimatedBuilder(
           animation: _waveController,
           builder: (context, child) {
-            final offset = math.sin((_waveController.value * 2 * math.pi) + (index * 0.5));
+            final offset = math.sin(
+              (_waveController.value * 2 * math.pi) + (index * 0.5),
+            );
             return Container(
               margin: const EdgeInsets.symmetric(horizontal: 3),
               width: 6,
@@ -262,7 +274,7 @@ class _VoiceButlerScreenState extends State<VoiceButlerScreen>
   Widget _buildStatusText() {
     String statusText;
     Color statusColor;
-    
+
     if (_isListening) {
       statusText = 'Listening...';
       statusColor = AppColors.accent;
@@ -279,19 +291,22 @@ class _VoiceButlerScreenState extends State<VoiceButlerScreen>
       statusText = 'Hold to speak';
       statusColor = AppColors.textSecondary;
     }
-    
+
     return Column(
       children: [
         Text(
-          statusText,
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.w600,
-            color: statusColor,
-          ),
-        )
+              statusText,
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.w600,
+                color: statusColor,
+              ),
+            )
             .animate(target: _isListening ? 1 : 0)
-            .shimmer(duration: 1.seconds, color: AppColors.accent.withValues(alpha: 0.3)),
+            .shimmer(
+              duration: 1.seconds,
+              color: AppColors.accent.withValues(alpha: 0.3),
+            ),
         if (!_isListening && !_isProcessing && !_isSpeaking)
           Padding(
             padding: const EdgeInsets.only(top: 8),
@@ -355,7 +370,11 @@ class _VoiceButlerScreenState extends State<VoiceButlerScreen>
                       gradient: AppGradients.primaryGradient,
                       borderRadius: BorderRadius.circular(6),
                     ),
-                    child: const Icon(Icons.auto_awesome, size: 12, color: Colors.white),
+                    child: const Icon(
+                      Icons.auto_awesome,
+                      size: 12,
+                      color: Colors.white,
+                    ),
                   ),
                   const SizedBox(width: 8),
                   const Text(
@@ -385,12 +404,24 @@ class _VoiceButlerScreenState extends State<VoiceButlerScreen>
 
   Widget _buildQuickCommands() {
     final commands = [
-      {'icon': Icons.wb_sunny, 'text': 'Daily briefing', 'color': AppColors.warning},
-      {'icon': Icons.add_task, 'text': 'Create task', 'color': AppColors.accent},
-      {'icon': Icons.calendar_today, 'text': 'My schedule', 'color': AppColors.primary},
+      {
+        'icon': Icons.wb_sunny,
+        'text': 'Daily briefing',
+        'color': AppColors.warning,
+      },
+      {
+        'icon': Icons.add_task,
+        'text': 'Create task',
+        'color': AppColors.accent,
+      },
+      {
+        'icon': Icons.calendar_today,
+        'text': 'My schedule',
+        'color': AppColors.primary,
+      },
       {'icon': Icons.insights, 'text': 'Insights', 'color': AppColors.success},
     ];
-    
+
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 16),
       child: SingleChildScrollView(
@@ -400,47 +431,52 @@ class _VoiceButlerScreenState extends State<VoiceButlerScreen>
           children: commands.asMap().entries.map((entry) {
             final index = entry.key;
             final cmd = entry.value;
-            
+
             return Padding(
-              padding: const EdgeInsets.only(right: 12),
-              child: GestureDetector(
-                onTap: () => _executeQuickCommand(cmd['text'] as String),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                  decoration: BoxDecoration(
-                    color: AppColors.surface,
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(color: AppColors.glassBorder),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: (cmd['color'] as Color).withValues(alpha: 0.15),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Icon(
-                          cmd['icon'] as IconData,
-                          size: 18,
-                          color: cmd['color'] as Color,
-                        ),
+                  padding: const EdgeInsets.only(right: 12),
+                  child: GestureDetector(
+                    onTap: () => _executeQuickCommand(cmd['text'] as String),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 12,
                       ),
-                      const SizedBox(width: 10),
-                      Text(
-                        cmd['text'] as String,
-                        style: const TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                          color: AppColors.textPrimary,
-                        ),
+                      decoration: BoxDecoration(
+                        color: AppColors.surface,
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: AppColors.glassBorder),
                       ),
-                    ],
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              color: (cmd['color'] as Color).withValues(
+                                alpha: 0.15,
+                              ),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Icon(
+                              cmd['icon'] as IconData,
+                              size: 18,
+                              color: cmd['color'] as Color,
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          Text(
+                            cmd['text'] as String,
+                            style: const TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              color: AppColors.textPrimary,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
-                ),
-              ),
-            )
+                )
                 .animate()
                 .fadeIn(delay: Duration(milliseconds: 100 + (index * 100)))
                 .slideX(begin: 0.2, end: 0);
@@ -515,29 +551,29 @@ class _VoiceButlerScreenState extends State<VoiceButlerScreen>
       _aiResponse = '';
       _currentAction = '';
     });
-    
+
     // Simulate voice recognition (in real app, use speech_to_text package)
     // For demo, we'll use predefined phrases
   }
 
   void _stopListening() async {
     if (!_isListening) return;
-    
+
     setState(() {
       _isListening = false;
       _isProcessing = true;
     });
-    
+
     // Simulate transcription
     await Future.delayed(const Duration(milliseconds: 500));
-    
+
     // For demo, simulate a recognized phrase
     final demoPhrase = 'Give me my daily briefing';
-    
+
     setState(() {
       _transcribedText = demoPhrase;
     });
-    
+
     await _processCommand(demoPhrase);
   }
 
@@ -547,7 +583,7 @@ class _VoiceButlerScreenState extends State<VoiceButlerScreen>
       _isProcessing = true;
       _aiResponse = '';
     });
-    
+
     await _processCommand(command);
   }
 
@@ -555,32 +591,32 @@ class _VoiceButlerScreenState extends State<VoiceButlerScreen>
     try {
       // Try to get real AI response
       final response = await _api.sendMessage(widget.userId, command);
-      
+
       setState(() {
         _isProcessing = false;
         _aiResponse = response.message;
         _currentAction = _getActionFromIntent(response.intentType ?? '');
         _isSpeaking = true;
       });
-      
+
       // Simulate speaking duration
       await Future.delayed(const Duration(seconds: 3));
-      
+
       setState(() {
         _isSpeaking = false;
       });
     } catch (e) {
       // Fallback to mock response
       await Future.delayed(const Duration(seconds: 1));
-      
+
       setState(() {
         _isProcessing = false;
         _aiResponse = _getMockResponse(command);
         _isSpeaking = true;
       });
-      
+
       await Future.delayed(const Duration(seconds: 2));
-      
+
       setState(() {
         _isSpeaking = false;
       });
@@ -602,7 +638,7 @@ class _VoiceButlerScreenState extends State<VoiceButlerScreen>
 
   String _getMockResponse(String command) {
     final lower = command.toLowerCase();
-    
+
     if (lower.contains('briefing') || lower.contains('daily')) {
       return '''🌅 Good afternoon! Here's your daily briefing:
 
@@ -618,7 +654,7 @@ class _VoiceButlerScreenState extends State<VoiceButlerScreen>
 
 Ready to conquer the day! 💪''';
     }
-    
+
     if (lower.contains('create task') || lower.contains('remind')) {
       return '''✅ I'll create that task for you!
 
@@ -630,7 +666,7 @@ Please tell me:
 Or just describe it naturally, like:
 "Remind me to prepare presentation for Monday at 2pm, high priority"''';
     }
-    
+
     if (lower.contains('schedule') || lower.contains('calendar')) {
       return '''📅 Here's your schedule for today:
 
@@ -641,7 +677,7 @@ Or just describe it naturally, like:
 
 You have 2 hours of free time. Would you like me to suggest how to use it?''';
     }
-    
+
     if (lower.contains('insight')) {
       return '''📊 Your Productivity Insights:
 
@@ -657,7 +693,7 @@ You have 2 hours of free time. Would you like me to suggest how to use it?''';
 
 Keep crushing it! 🚀''';
     }
-    
+
     return '''I understand you said: "$command"
 
 I can help you with:
@@ -705,8 +741,14 @@ Try one of these commands!''';
               const SizedBox(height: 20),
               _buildHelpItem(Icons.touch_app, 'Hold the orb to speak'),
               _buildHelpItem(Icons.mic, 'Release to process your command'),
-              _buildHelpItem(Icons.auto_awesome, 'AI understands natural language'),
-              _buildHelpItem(Icons.bolt, 'Use quick commands for common actions'),
+              _buildHelpItem(
+                Icons.auto_awesome,
+                'AI understands natural language',
+              ),
+              _buildHelpItem(
+                Icons.bolt,
+                'Use quick commands for common actions',
+              ),
               const SizedBox(height: 16),
               SizedBox(
                 width: double.infinity,

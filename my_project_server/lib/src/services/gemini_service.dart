@@ -32,10 +32,17 @@ class GeminiService {
     }
   }
 
-  Future<String> _callGeminiApi(String message, List<ChatMessage> history) async {
-    final contextMessages = history.take(10).map((m) => '${m.role}: ${m.content}').join('\n');
+  Future<String> _callGeminiApi(
+    String message,
+    List<ChatMessage> history,
+  ) async {
+    final contextMessages = history
+        .take(10)
+        .map((m) => '${m.role}: ${m.content}')
+        .join('\n');
 
-    final systemPrompt = '''
+    final systemPrompt =
+        '''
 You are LifeSync Butler, a friendly AI personal assistant. Help users manage tasks and schedules.
 
 When user wants to CREATE a task, respond with confirmation and include:
@@ -45,20 +52,21 @@ Priority: low, medium, high, urgent. Omit dueDate if not mentioned.
 Be friendly and concise. Current time: ${DateTime.now().toIso8601String()}
 ''';
 
-    final fullPrompt = '$systemPrompt\n\nConversation:\n$contextMessages\n\nUser: $message\nAssistant:';
+    final fullPrompt =
+        '$systemPrompt\n\nConversation:\n$contextMessages\n\nUser: $message\nAssistant:';
 
     final requestBody = {
       'contents': [
         {
           'parts': [
-            {'text': fullPrompt}
-          ]
-        }
+            {'text': fullPrompt},
+          ],
+        },
       ],
       'generationConfig': {
         'temperature': 0.7,
         'maxOutputTokens': 500,
-      }
+      },
     };
 
     final response = await http.post(
@@ -86,7 +94,7 @@ Be friendly and concise. Current time: ${DateTime.now().toIso8601String()}
       intentType = 'action';
       final parts = response.split('TASK_CREATE:');
       message = parts[0].trim();
-      
+
       try {
         final jsonStr = parts[1].trim().split('\n')[0];
         final taskData = jsonDecode(jsonStr);
@@ -96,21 +104,25 @@ Be friendly and concise. Current time: ${DateTime.now().toIso8601String()}
           description: taskData['description'],
           priority: taskData['priority'] ?? 'medium',
           status: 'pending',
-          dueDate: taskData['dueDate'] != null 
-              ? DateTime.parse(taskData['dueDate']) 
+          dueDate: taskData['dueDate'] != null
+              ? DateTime.parse(taskData['dueDate'])
               : null,
           createdAt: DateTime.now(),
         );
       } catch (e) {
         print('Error parsing task JSON: $e');
       }
-    } else if (response.toLowerCase().contains('schedule') || 
-               response.toLowerCase().contains('task')) {
+    } else if (response.toLowerCase().contains('schedule') ||
+        response.toLowerCase().contains('task')) {
       intentType = 'query';
       suggestedActions = ['View all tasks', 'Create new task', 'Show today'];
     } else {
       intentType = 'greeting';
-      suggestedActions = ['What are my tasks?', 'Create a task', 'Show insights'];
+      suggestedActions = [
+        'What are my tasks?',
+        'Create a task',
+        'Show insights',
+      ];
     }
 
     return AiChatResponse(
@@ -125,9 +137,10 @@ Be friendly and concise. Current time: ${DateTime.now().toIso8601String()}
     final lowerMessage = message.toLowerCase();
 
     // Task creation intent
-    if (lowerMessage.contains('create') || lowerMessage.contains('add') || 
-        lowerMessage.contains('remind') || lowerMessage.contains('schedule')) {
-      
+    if (lowerMessage.contains('create') ||
+        lowerMessage.contains('add') ||
+        lowerMessage.contains('remind') ||
+        lowerMessage.contains('schedule')) {
       String title = 'New Task';
       String priority = 'medium';
       DateTime? dueDate;
@@ -136,7 +149,10 @@ Be friendly and concise. Current time: ${DateTime.now().toIso8601String()}
       if (lowerMessage.contains('to ')) {
         final parts = message.split(RegExp(r'\bto\b', caseSensitive: false));
         if (parts.length > 1) {
-          title = parts[1].trim().split(RegExp(r'\b(tomorrow|today|next)\b'))[0].trim();
+          title = parts[1]
+              .trim()
+              .split(RegExp(r'\b(tomorrow|today|next)\b'))[0]
+              .trim();
           if (title.length > 50) title = title.substring(0, 50);
         }
       }
@@ -151,12 +167,14 @@ Be friendly and concise. Current time: ${DateTime.now().toIso8601String()}
       }
 
       // Check priority
-      if (lowerMessage.contains('urgent') || lowerMessage.contains('important')) {
+      if (lowerMessage.contains('urgent') ||
+          lowerMessage.contains('important')) {
         priority = 'high';
       }
 
       return AiChatResponse(
-        message: "I've created a task for you: \"$title\". ${dueDate != null ? 'Due ${_formatDate(dueDate)}.' : ''} Is there anything else you'd like me to help with?",
+        message:
+            "I've created a task for you: \"$title\". ${dueDate != null ? 'Due ${_formatDate(dueDate)}.' : ''} Is there anything else you'd like me to help with?",
         intentType: 'action',
         suggestedActions: ['View all tasks', 'Create another', 'Set reminder'],
         createdTask: Task(
@@ -172,30 +190,43 @@ Be friendly and concise. Current time: ${DateTime.now().toIso8601String()}
     }
 
     // Schedule query
-    if (lowerMessage.contains('schedule') || lowerMessage.contains('today') ||
-        lowerMessage.contains('tasks') || lowerMessage.contains('what')) {
+    if (lowerMessage.contains('schedule') ||
+        lowerMessage.contains('today') ||
+        lowerMessage.contains('tasks') ||
+        lowerMessage.contains('what')) {
       return AiChatResponse(
-        message: "I can help you check your schedule! Would you like to see today's tasks, upcoming tasks, or your productivity stats?",
+        message:
+            "I can help you check your schedule! Would you like to see today's tasks, upcoming tasks, or your productivity stats?",
         intentType: 'query',
         suggestedActions: ["Today's tasks", 'Upcoming tasks', 'Show stats'],
       );
     }
 
     // Greeting
-    if (lowerMessage.contains('hello') || lowerMessage.contains('hi') ||
-        lowerMessage.contains('hey') || message.length < 10) {
+    if (lowerMessage.contains('hello') ||
+        lowerMessage.contains('hi') ||
+        lowerMessage.contains('hey') ||
+        message.length < 10) {
       final hour = DateTime.now().hour;
-      final greeting = hour < 12 ? 'Good morning' : (hour < 17 ? 'Good afternoon' : 'Good evening');
+      final greeting = hour < 12
+          ? 'Good morning'
+          : (hour < 17 ? 'Good afternoon' : 'Good evening');
       return AiChatResponse(
-        message: "$greeting! I'm your LifeSync Butler. How can I help you today? I can help you manage tasks, check your schedule, or provide productivity insights.",
+        message:
+            "$greeting! I'm your LifeSync Butler. How can I help you today? I can help you manage tasks, check your schedule, or provide productivity insights.",
         intentType: 'greeting',
-        suggestedActions: ['Create a task', "What's my schedule?", 'Show insights'],
+        suggestedActions: [
+          'Create a task',
+          "What's my schedule?",
+          'Show insights',
+        ],
       );
     }
 
     // Default helpful response
     return AiChatResponse(
-      message: "I'm here to help! I can create tasks, show your schedule, or provide productivity tips. What would you like to do?",
+      message:
+          "I'm here to help! I can create tasks, show your schedule, or provide productivity tips. What would you like to do?",
       intentType: 'query',
       suggestedActions: ['Create task', 'View schedule', 'Get insights'],
     );
@@ -205,10 +236,10 @@ Be friendly and concise. Current time: ${DateTime.now().toIso8601String()}
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
     final dateOnly = DateTime(date.year, date.month, date.day);
-    
+
     if (dateOnly == today) return 'today';
     if (dateOnly == today.add(const Duration(days: 1))) return 'tomorrow';
-    
+
     return '${date.day}/${date.month}/${date.year}';
   }
 }

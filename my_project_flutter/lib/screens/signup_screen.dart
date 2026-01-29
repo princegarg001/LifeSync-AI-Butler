@@ -26,7 +26,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
-  
+
   bool _isLoading = false;
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
@@ -44,12 +44,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   Future<void> _handleSignUp() async {
     if (!_formKey.currentState!.validate()) return;
-    
+
     if (!_agreeToTerms) {
       setState(() => _errorMessage = 'Please agree to the Terms & Conditions');
       return;
     }
-    
+
     setState(() {
       _isLoading = true;
       _errorMessage = null;
@@ -61,7 +61,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         email: _emailController.text.trim(),
         password: _passwordController.text,
       );
-      
+
       if (mounted) {
         widget.onSignUpSuccess();
       }
@@ -142,43 +142,43 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(height: 40),
-                  
+
                   // Logo and title
                   _buildHeader(),
-                  
+
                   const SizedBox(height: 40),
-                  
+
                   // Sign up form
                   _buildSignUpForm(),
-                  
+
                   const SizedBox(height: 24),
-                  
+
                   // Terms checkbox
                   _buildTermsCheckbox(),
-                  
+
                   const SizedBox(height: 24),
-                  
+
                   // Error message
                   if (_errorMessage != null) _buildErrorMessage(),
-                  
+
                   // Sign up button
                   _buildSignUpButton(),
-                  
+
                   const SizedBox(height: 24),
-                  
+
                   // Divider
                   _buildDivider(),
-                  
+
                   const SizedBox(height: 24),
-                  
+
                   // Social buttons
                   _buildSocialButtons(),
-                  
+
                   const SizedBox(height: 32),
-                  
+
                   // Navigate to Sign In
                   _buildSignInLink(),
-                  
+
                   const SizedBox(height: 40),
                 ],
               ),
@@ -195,51 +195,51 @@ class _SignUpScreenState extends State<SignUpScreen> {
       children: [
         // App logo
         Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            gradient: AppGradients.primaryGradient,
-            borderRadius: BorderRadius.circular(20),
-            boxShadow: [
-              BoxShadow(
-                color: AppColors.primary.withValues(alpha: 0.4),
-                blurRadius: 20,
-                offset: const Offset(0, 8),
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                gradient: AppGradients.primaryGradient,
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: AppColors.primary.withValues(alpha: 0.4),
+                    blurRadius: 20,
+                    offset: const Offset(0, 8),
+                  ),
+                ],
               ),
-            ],
-          ),
-          child: const Icon(
-            Icons.auto_awesome,
-            size: 36,
-            color: Colors.white,
-          ),
-        )
+              child: const Icon(
+                Icons.auto_awesome,
+                size: 36,
+                color: Colors.white,
+              ),
+            )
             .animate()
             .fadeIn(duration: 600.ms)
             .scale(begin: const Offset(0.5, 0.5)),
-        
+
         const SizedBox(height: 32),
-        
+
         const Text(
-          'Create Account',
-          style: TextStyle(
-            fontSize: 32,
-            fontWeight: FontWeight.bold,
-            color: AppColors.textPrimary,
-          ),
-        )
+              'Create Account',
+              style: TextStyle(
+                fontSize: 32,
+                fontWeight: FontWeight.bold,
+                color: AppColors.textPrimary,
+              ),
+            )
             .animate()
             .fadeIn(delay: 200.ms, duration: 500.ms)
             .slideX(begin: -0.1, end: 0),
-        
+
         const SizedBox(height: 8),
-        
+
         const Text(
-          'Start your productivity journey with LifeSync',
-          style: TextStyle(
-            fontSize: 16,
-            color: AppColors.textSecondary,
-          ),
-        )
+              'Start your productivity journey with LifeSync',
+              style: TextStyle(
+                fontSize: 16,
+                color: AppColors.textSecondary,
+              ),
+            )
             .animate()
             .fadeIn(delay: 300.ms, duration: 500.ms)
             .slideX(begin: -0.1, end: 0),
@@ -263,9 +263,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
           },
           delay: 400,
         ),
-        
+
         const SizedBox(height: 16),
-        
+
         // Email field
         _buildTextField(
           controller: _emailController,
@@ -283,9 +283,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
           },
           delay: 500,
         ),
-        
+
         const SizedBox(height: 16),
-        
+
         // Password field
         _buildTextField(
           controller: _passwordController,
@@ -297,7 +297,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
               _obscurePassword ? Icons.visibility_off : Icons.visibility,
               color: AppColors.textMuted,
             ),
-            onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
+            onPressed: () =>
+                setState(() => _obscurePassword = !_obscurePassword),
           ),
           validator: (value) {
             if (value == null || value.isEmpty) {
@@ -310,9 +311,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
           },
           delay: 600,
         ),
-        
+
         const SizedBox(height: 16),
-        
+
         // Confirm password field
         _buildTextField(
           controller: _confirmPasswordController,
@@ -324,7 +325,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
               _obscureConfirmPassword ? Icons.visibility_off : Icons.visibility,
               color: AppColors.textMuted,
             ),
-            onPressed: () => setState(() => _obscureConfirmPassword = !_obscureConfirmPassword),
+            onPressed: () => setState(
+              () => _obscureConfirmPassword = !_obscureConfirmPassword,
+            ),
           ),
           validator: (value) {
             if (value != _passwordController.text) {
@@ -349,38 +352,41 @@ class _SignUpScreenState extends State<SignUpScreen> {
     int delay = 0,
   }) {
     return TextFormField(
-      controller: controller,
-      keyboardType: keyboardType,
-      obscureText: obscureText,
-      validator: validator,
-      style: const TextStyle(color: AppColors.textPrimary),
-      decoration: InputDecoration(
-        labelText: label,
-        labelStyle: const TextStyle(color: AppColors.textMuted),
-        prefixIcon: Icon(icon, color: AppColors.textMuted),
-        suffixIcon: suffixIcon,
-        filled: true,
-        fillColor: AppColors.surface,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16),
-          borderSide: const BorderSide(color: AppColors.glassBorder),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16),
-          borderSide: const BorderSide(color: AppColors.glassBorder),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16),
-          borderSide: const BorderSide(color: AppColors.primary, width: 2),
-        ),
-        errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16),
-          borderSide: const BorderSide(color: AppColors.error),
-        ),
-      ),
-    )
+          controller: controller,
+          keyboardType: keyboardType,
+          obscureText: obscureText,
+          validator: validator,
+          style: const TextStyle(color: AppColors.textPrimary),
+          decoration: InputDecoration(
+            labelText: label,
+            labelStyle: const TextStyle(color: AppColors.textMuted),
+            prefixIcon: Icon(icon, color: AppColors.textMuted),
+            suffixIcon: suffixIcon,
+            filled: true,
+            fillColor: AppColors.surface,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(16),
+              borderSide: const BorderSide(color: AppColors.glassBorder),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(16),
+              borderSide: const BorderSide(color: AppColors.glassBorder),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(16),
+              borderSide: const BorderSide(color: AppColors.primary, width: 2),
+            ),
+            errorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(16),
+              borderSide: const BorderSide(color: AppColors.error),
+            ),
+          ),
+        )
         .animate()
-        .fadeIn(delay: Duration(milliseconds: delay), duration: 400.ms)
+        .fadeIn(
+          delay: Duration(milliseconds: delay),
+          duration: 400.ms,
+        )
         .slideY(begin: 0.1, end: 0);
   }
 
@@ -417,9 +423,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           ),
         ),
       ],
-    )
-        .animate()
-        .fadeIn(delay: 800.ms, duration: 400.ms);
+    ).animate().fadeIn(delay: 800.ms, duration: 400.ms);
   }
 
   Widget _buildErrorMessage() {
@@ -448,14 +452,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   Widget _buildSignUpButton() {
     return SizedBox(
-      width: double.infinity,
-      child: GradientButton(
-        text: _isLoading ? 'Creating Account...' : 'Create Account',
-        onPressed: _isLoading ? null : _handleSignUp,
-        icon: _isLoading ? null : Icons.arrow_forward,
-        height: 56,
-      ),
-    )
+          width: double.infinity,
+          child: GradientButton(
+            text: _isLoading ? 'Creating Account...' : 'Create Account',
+            onPressed: _isLoading ? null : _handleSignUp,
+            icon: _isLoading ? null : Icons.arrow_forward,
+            height: 56,
+          ),
+        )
         .animate()
         .fadeIn(delay: 900.ms, duration: 400.ms)
         .slideY(begin: 0.2, end: 0);
@@ -477,34 +481,32 @@ class _SignUpScreenState extends State<SignUpScreen> {
         ),
         Expanded(child: Divider(color: AppColors.glassBorder)),
       ],
-    )
-        .animate()
-        .fadeIn(delay: 1000.ms, duration: 400.ms);
+    ).animate().fadeIn(delay: 1000.ms, duration: 400.ms);
   }
 
   Widget _buildSocialButtons() {
     return Row(
-      children: [
-        Expanded(
-          child: _buildSocialButton(
-            icon: 'G',
-            label: 'Google',
-            onTap: _handleGoogleSignUp,
-            color: Colors.red,
-          ),
-        ),
-        const SizedBox(width: 16),
-        Expanded(
-          child: _buildSocialButton(
-            icon: '',
-            label: 'Apple',
-            onTap: _handleAppleSignUp,
-            color: Colors.white,
-            isApple: true,
-          ),
-        ),
-      ],
-    )
+          children: [
+            Expanded(
+              child: _buildSocialButton(
+                icon: 'G',
+                label: 'Google',
+                onTap: _handleGoogleSignUp,
+                color: Colors.red,
+              ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: _buildSocialButton(
+                icon: '',
+                label: 'Apple',
+                onTap: _handleAppleSignUp,
+                color: Colors.white,
+                isApple: true,
+              ),
+            ),
+          ],
+        )
         .animate()
         .fadeIn(delay: 1100.ms, duration: 400.ms)
         .slideY(begin: 0.1, end: 0);
@@ -578,8 +580,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
           ),
         ),
       ),
-    )
-        .animate()
-        .fadeIn(delay: 1200.ms, duration: 400.ms);
+    ).animate().fadeIn(delay: 1200.ms, duration: 400.ms);
   }
 }

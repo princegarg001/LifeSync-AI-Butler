@@ -19,7 +19,11 @@ class TaskEndpoint extends Endpoint {
   }
 
   /// Get tasks with status filter
-  Future<List<Task>> getTasksByStatus(Session session, int userId, String status) async {
+  Future<List<Task>> getTasksByStatus(
+    Session session,
+    int userId,
+    String status,
+  ) async {
     return await Task.db.find(
       session,
       where: (t) => t.userId.equals(userId) & t.status.equals(status),

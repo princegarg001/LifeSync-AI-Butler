@@ -8,7 +8,7 @@ import '../services/api_service.dart';
 /// Insights Screen with premium analytics UI
 class InsightsScreen extends StatefulWidget {
   final int userId;
-  
+
   const InsightsScreen({super.key, required this.userId});
 
   @override
@@ -21,16 +21,16 @@ class _InsightsScreenState extends State<InsightsScreen> {
   int hoursSaved = 24;
   int streak = 7;
   bool _isLoading = false;
-  
+
   @override
   void initState() {
     super.initState();
     _loadInsights();
   }
-  
+
   Future<void> _loadInsights() async {
     setState(() => _isLoading = true);
-    
+
     try {
       final dashboard = await _api.getDashboardData(widget.userId);
       if (mounted) {
@@ -65,25 +65,25 @@ class _InsightsScreenState extends State<InsightsScreen> {
               slivers: [
                 // Header
                 SliverToBoxAdapter(child: _buildHeader()),
-                
+
                 // Weekly Progress Chart
                 SliverPadding(
                   padding: const EdgeInsets.all(20),
                   sliver: SliverToBoxAdapter(child: _buildWeeklyChart()),
                 ),
-                
+
                 // Stats Row
                 SliverPadding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   sliver: SliverToBoxAdapter(child: _buildStatsRow()),
                 ),
-                
+
                 // AI Recommendations
                 SliverPadding(
                   padding: const EdgeInsets.all(20),
                   sliver: SliverToBoxAdapter(child: _buildRecommendations()),
                 ),
-                
+
                 // Bottom padding
                 const SliverToBoxAdapter(child: SizedBox(height: 100)),
               ],
@@ -107,10 +107,7 @@ class _InsightsScreenState extends State<InsightsScreen> {
               fontWeight: FontWeight.bold,
               color: AppColors.textPrimary,
             ),
-          )
-              .animate()
-              .fadeIn(duration: 400.ms)
-              .slideX(begin: -0.1, end: 0),
+          ).animate().fadeIn(duration: 400.ms).slideX(begin: -0.1, end: 0),
           const SizedBox(height: 4),
           const Text(
             'Your productivity analytics',
@@ -118,9 +115,7 @@ class _InsightsScreenState extends State<InsightsScreen> {
               fontSize: 14,
               color: AppColors.textSecondary,
             ),
-          )
-              .animate()
-              .fadeIn(delay: 100.ms, duration: 400.ms),
+          ).animate().fadeIn(delay: 100.ms, duration: 400.ms),
         ],
       ),
     );
@@ -144,7 +139,10 @@ class _InsightsScreenState extends State<InsightsScreen> {
                 ),
               ),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 6,
+                ),
                 decoration: BoxDecoration(
                   color: AppColors.success.withValues(alpha: 0.15),
                   borderRadius: BorderRadius.circular(8),
@@ -181,7 +179,15 @@ class _InsightsScreenState extends State<InsightsScreen> {
                     sideTitles: SideTitles(
                       showTitles: true,
                       getTitlesWidget: (value, meta) {
-                        const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+                        const days = [
+                          'Mon',
+                          'Tue',
+                          'Wed',
+                          'Thu',
+                          'Fri',
+                          'Sat',
+                          'Sun',
+                        ];
                         return Padding(
                           padding: const EdgeInsets.only(top: 8),
                           child: Text(
@@ -195,9 +201,15 @@ class _InsightsScreenState extends State<InsightsScreen> {
                       },
                     ),
                   ),
-                  leftTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                  topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                  rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                  leftTitles: const AxisTitles(
+                    sideTitles: SideTitles(showTitles: false),
+                  ),
+                  topTitles: const AxisTitles(
+                    sideTitles: SideTitles(showTitles: false),
+                  ),
+                  rightTitles: const AxisTitles(
+                    sideTitles: SideTitles(showTitles: false),
+                  ),
                 ),
                 borderData: FlBorderData(show: false),
                 gridData: const FlGridData(show: false),
@@ -360,14 +372,13 @@ class _InsightsScreenState extends State<InsightsScreen> {
             fontWeight: FontWeight.w600,
             color: AppColors.textPrimary,
           ),
-        )
-            .animate()
-            .fadeIn(delay: 600.ms),
+        ).animate().fadeIn(delay: 600.ms),
         const SizedBox(height: 16),
         _buildRecommendationCard(
           icon: Icons.psychology,
           title: 'Focus Time Optimization',
-          description: 'Your peak productivity is 9-11 AM. Consider scheduling important tasks during this window.',
+          description:
+              'Your peak productivity is 9-11 AM. Consider scheduling important tasks during this window.',
           color: AppColors.primary,
           delay: 650,
         ),
@@ -375,7 +386,8 @@ class _InsightsScreenState extends State<InsightsScreen> {
         _buildRecommendationCard(
           icon: Icons.battery_charging_full,
           title: 'Energy Management',
-          description: 'Take breaks every 90 minutes. You complete 40% more tasks when well-rested.',
+          description:
+              'Take breaks every 90 minutes. You complete 40% more tasks when well-rested.',
           color: AppColors.accent,
           delay: 700,
         ),
@@ -383,7 +395,8 @@ class _InsightsScreenState extends State<InsightsScreen> {
         _buildRecommendationCard(
           icon: Icons.timer,
           title: 'Time Blocking',
-          description: 'Block 2-hour chunks for deep work. This reduces context switching by 60%.',
+          description:
+              'Block 2-hour chunks for deep work. This reduces context switching by 60%.',
           color: AppColors.success,
           delay: 750,
         ),

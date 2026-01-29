@@ -8,7 +8,7 @@ import '../services/auth_service.dart';
 /// World-class Dashboard Screen for LifeSync AI Butler
 class DashboardScreen extends StatefulWidget {
   final int userId;
-  
+
   const DashboardScreen({super.key, required this.userId});
 
   @override
@@ -17,7 +17,7 @@ class DashboardScreen extends StatefulWidget {
 
 class _DashboardScreenState extends State<DashboardScreen> {
   final ApiService _api = ApiService.instance;
-  
+
   String get userName => AuthService.instance.currentUser?.firstName ?? 'User';
   String get userInitials => AuthService.instance.currentUser?.initials ?? 'U';
   int productivityScore = 78;
@@ -26,17 +26,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
   int streak = 7;
   bool _isLoading = true;
   String? _error;
-  
+
   @override
   void initState() {
     super.initState();
     _loadDashboardData();
   }
-  
+
   Future<void> _loadDashboardData() async {
     try {
       setState(() => _isLoading = true);
-      
+
       // Try to load from backend - fall back to mock data if fails
       try {
         final dashboard = await _api.getDashboardData(widget.userId);
@@ -70,7 +70,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       }
     }
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -90,7 +90,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 SliverToBoxAdapter(
                   child: _buildHeader(),
                 ),
-                
+
                 // Quick Stats Grid
                 SliverPadding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -98,7 +98,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     child: _buildStatsGrid(),
                   ),
                 ),
-                
+
                 // Productivity Card
                 SliverPadding(
                   padding: const EdgeInsets.all(20),
@@ -106,7 +106,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     child: _buildProductivityCard(),
                   ),
                 ),
-                
+
                 // AI Insights Section
                 SliverPadding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -114,7 +114,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     child: _buildInsightsSection(),
                   ),
                 ),
-                
+
                 // Today's Tasks
                 SliverPadding(
                   padding: const EdgeInsets.all(20),
@@ -122,7 +122,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     child: _buildTasksSection(),
                   ),
                 ),
-                
+
                 // Bottom padding for nav bar
                 const SliverToBoxAdapter(
                   child: SizedBox(height: 100),
@@ -143,7 +143,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     } else if (hour >= 12 && hour < 17) {
       greeting = 'Good afternoon';
     }
-    
+
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 20, 20, 24),
       child: Row(
@@ -153,58 +153,58 @@ class _DashboardScreenState extends State<DashboardScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '$greeting,',
-                  style: const TextStyle(
-                    fontSize: 16,
-                    color: AppColors.textSecondary,
-                  ),
-                )
+                      '$greeting,',
+                      style: const TextStyle(
+                        fontSize: 16,
+                        color: AppColors.textSecondary,
+                      ),
+                    )
                     .animate()
                     .fadeIn(duration: 400.ms)
                     .slideX(begin: -0.1, end: 0),
                 const SizedBox(height: 4),
                 Text(
-                  userName,
-                  style: const TextStyle(
-                    fontSize: 32,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.textPrimary,
-                  ),
-                )
+                      userName,
+                      style: const TextStyle(
+                        fontSize: 32,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.textPrimary,
+                      ),
+                    )
                     .animate()
                     .fadeIn(delay: 100.ms, duration: 400.ms)
                     .slideX(begin: -0.1, end: 0),
               ],
             ),
           ),
-          
-          // Profile avatar with glow  
+
+          // Profile avatar with glow
           Container(
-            padding: const EdgeInsets.all(3),
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              gradient: AppGradients.primaryGradient,
-              boxShadow: [
-                BoxShadow(
-                  color: AppColors.primary.withValues(alpha: 0.4),
-                  blurRadius: 20,
-                  spreadRadius: 2,
+                padding: const EdgeInsets.all(3),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: AppGradients.primaryGradient,
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColors.primary.withValues(alpha: 0.4),
+                      blurRadius: 20,
+                      spreadRadius: 2,
+                    ),
+                  ],
                 ),
-              ],
-            ),
-            child: CircleAvatar(
-              radius: 26,
-              backgroundColor: AppColors.surface,
-              child: Text(
-                userInitials,
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.textPrimary,
+                child: CircleAvatar(
+                  radius: 26,
+                  backgroundColor: AppColors.surface,
+                  child: Text(
+                    userInitials,
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.textPrimary,
+                    ),
+                  ),
                 ),
-              ),
-            ),
-          )
+              )
               .animate()
               .fadeIn(delay: 200.ms, duration: 400.ms)
               .scale(begin: const Offset(0.8, 0.8)),
@@ -257,7 +257,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           // Productivity ring
           ProductivityRing(percentage: productivityScore),
           const SizedBox(width: 24),
-          
+
           // Productivity details
           Expanded(
             child: Column(
@@ -355,14 +355,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
               child: const Text('See all'),
             ),
           ],
-        )
-            .animate()
-            .fadeIn(delay: 500.ms),
+        ).animate().fadeIn(delay: 500.ms),
         const SizedBox(height: 8),
         _buildInsightCard(
           icon: Icons.lightbulb_outline,
           title: 'Peak Performance Time',
-          message: 'You\'re most productive between 9-11 AM. Schedule important tasks during this window!',
+          message:
+              'You\'re most productive between 9-11 AM. Schedule important tasks during this window!',
           color: AppColors.warning,
           delay: 550,
         ),
@@ -370,7 +369,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
         _buildInsightCard(
           icon: Icons.trending_up,
           title: 'Weekly Progress',
-          message: 'You\'ve completed 23% more tasks than last week. Keep up the great work!',
+          message:
+              'You\'ve completed 23% more tasks than last week. Keep up the great work!',
           color: AppColors.success,
           delay: 600,
         ),
@@ -452,11 +452,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
               height: 40,
             ),
           ],
-        )
-            .animate()
-            .fadeIn(delay: 650.ms),
+        ).animate().fadeIn(delay: 650.ms),
         const SizedBox(height: 16),
-        
+
         TaskTile(
           title: 'Review project proposal',
           priority: 'high',

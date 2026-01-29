@@ -293,7 +293,7 @@ class TaskTile extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 14),
-          
+
           // Task details
           Expanded(
             child: Column(
@@ -333,7 +333,7 @@ class TaskTile extends StatelessWidget {
               ],
             ),
           ),
-          
+
           // Priority
           PriorityChip(priority: priority),
         ],
@@ -345,10 +345,10 @@ class TaskTile extends StatelessWidget {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
     final dateOnly = DateTime(date.year, date.month, date.day);
-    
+
     if (dateOnly == today) return 'Today';
     if (dateOnly == today.add(const Duration(days: 1))) return 'Tomorrow';
-    
+
     return '${date.day}/${date.month}/${date.year}';
   }
 }
@@ -420,8 +420,10 @@ class ProductivityRing extends StatelessWidget {
           ),
         ],
       ),
-    )
-        .animate()
-        .scale(delay: 200.ms, duration: 400.ms, curve: Curves.easeOutBack);
+    ).animate().scale(
+      delay: 200.ms,
+      duration: 400.ms,
+      curve: Curves.easeOutBack,
+    );
   }
 }

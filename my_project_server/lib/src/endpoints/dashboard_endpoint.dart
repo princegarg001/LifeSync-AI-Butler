@@ -23,7 +23,9 @@ class DashboardEndpoint extends Endpoint {
           (t.dueDate < endOfDay),
     );
 
-    final completedToday = todayTasks.where((t) => t.status == 'completed').length;
+    final completedToday = todayTasks
+        .where((t) => t.status == 'completed')
+        .length;
 
     // Get upcoming tasks
     final weekFromNow = now.add(const Duration(days: 7));
@@ -54,9 +56,7 @@ class DashboardEndpoint extends Endpoint {
     // Get active insights
     final insights = await Insight.db.find(
       session,
-      where: (i) =>
-          i.userId.equals(userId) &
-          i.isDismissed.equals(false),
+      where: (i) => i.userId.equals(userId) & i.isDismissed.equals(false),
       orderBy: (i) => i.priority,
       orderDescending: true,
       limit: 5,
@@ -98,7 +98,7 @@ class DashboardEndpoint extends Endpoint {
   Future<int> _calculateStreak(Session session, int userId) async {
     final now = DateTime.now();
     int streak = 0;
-    
+
     for (var i = 0; i < 30; i++) {
       final date = now.subtract(Duration(days: i));
       final startOfDay = DateTime(date.year, date.month, date.day);

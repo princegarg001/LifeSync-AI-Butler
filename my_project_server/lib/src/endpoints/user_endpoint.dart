@@ -60,13 +60,18 @@ class UserEndpoint extends Endpoint {
     }
 
     if (timezone != null) user.timezone = timezone;
-    if (notificationsEnabled != null) user.notificationsEnabled = notificationsEnabled;
+    if (notificationsEnabled != null)
+      user.notificationsEnabled = notificationsEnabled;
 
     return await User.db.updateRow(session, user);
   }
 
   /// Update user avatar
-  Future<User> updateAvatar(Session session, int userId, String avatarUrl) async {
+  Future<User> updateAvatar(
+    Session session,
+    int userId,
+    String avatarUrl,
+  ) async {
     final user = await User.db.findById(session, userId);
     if (user == null) {
       throw Exception('User not found');

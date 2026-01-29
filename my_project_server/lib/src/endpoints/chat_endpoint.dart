@@ -88,7 +88,7 @@ class ChatEndpoint extends Endpoint {
   /// Get quick suggestions based on time
   Future<List<String>> getQuickSuggestions(Session session) async {
     final hour = DateTime.now().hour;
-    
+
     if (hour >= 6 && hour < 12) {
       return [
         "What's on my schedule today?",

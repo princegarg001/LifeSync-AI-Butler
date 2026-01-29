@@ -17,13 +17,13 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   bool _notificationsEnabled = true;
   bool _darkModeEnabled = true;
-  
+
   @override
   void initState() {
     super.initState();
     _loadSettings();
   }
-  
+
   void _loadSettings() {
     final user = AuthService.instance.currentUser;
     if (user != null) {
@@ -36,7 +36,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     final user = AuthService.instance.currentUser;
-    
+
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
@@ -64,41 +64,41 @@ class _ProfileScreenState extends State<ProfileScreen> {
             child: Column(
               children: [
                 const SizedBox(height: 20),
-                
+
                 // Profile header
                 _buildProfileHeader(user),
-                
+
                 const SizedBox(height: 32),
-                
+
                 // Account section
                 _buildSectionTitle('Account'),
                 const SizedBox(height: 12),
                 _buildAccountSection(),
-                
+
                 const SizedBox(height: 24),
-                
+
                 // Preferences section
                 _buildSectionTitle('Preferences'),
                 const SizedBox(height: 12),
                 _buildPreferencesSection(),
-                
+
                 const SizedBox(height: 24),
-                
+
                 // Support section
                 _buildSectionTitle('Support'),
                 const SizedBox(height: 12),
                 _buildSupportSection(),
-                
+
                 const SizedBox(height: 32),
-                
+
                 // Sign out button
                 _buildSignOutButton(),
-                
+
                 const SizedBox(height: 24),
-                
+
                 // App version
                 _buildAppVersion(),
-                
+
                 const SizedBox(height: 40),
               ],
             ),
@@ -115,36 +115,36 @@ class _ProfileScreenState extends State<ProfileScreen> {
         children: [
           // Avatar
           Container(
-            width: 100,
-            height: 100,
-            decoration: BoxDecoration(
-              gradient: AppGradients.primaryGradient,
-              shape: BoxShape.circle,
-              boxShadow: [
-                BoxShadow(
-                  color: AppColors.primary.withValues(alpha: 0.4),
-                  blurRadius: 20,
-                  spreadRadius: 2,
+                width: 100,
+                height: 100,
+                decoration: BoxDecoration(
+                  gradient: AppGradients.primaryGradient,
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColors.primary.withValues(alpha: 0.4),
+                      blurRadius: 20,
+                      spreadRadius: 2,
+                    ),
+                  ],
                 ),
-              ],
-            ),
-            child: Center(
-              child: Text(
-                user?.initials ?? 'U',
-                style: const TextStyle(
-                  fontSize: 36,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
+                child: Center(
+                  child: Text(
+                    user?.initials ?? 'U',
+                    style: const TextStyle(
+                      fontSize: 36,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
                 ),
-              ),
-            ),
-          )
+              )
               .animate()
               .fadeIn(duration: 500.ms)
               .scale(begin: const Offset(0.8, 0.8)),
-          
+
           const SizedBox(height: 16),
-          
+
           // Name
           Text(
             user?.name ?? 'User',
@@ -153,12 +153,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
               fontWeight: FontWeight.bold,
               color: AppColors.textPrimary,
             ),
-          )
-              .animate()
-              .fadeIn(delay: 100.ms, duration: 400.ms),
-          
+          ).animate().fadeIn(delay: 100.ms, duration: 400.ms),
+
           const SizedBox(height: 4),
-          
+
           // Email
           Text(
             user?.email ?? 'user@example.com',
@@ -166,12 +164,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
               fontSize: 14,
               color: AppColors.textSecondary,
             ),
-          )
-              .animate()
-              .fadeIn(delay: 150.ms, duration: 400.ms),
-          
+          ).animate().fadeIn(delay: 150.ms, duration: 400.ms),
+
           const SizedBox(height: 16),
-          
+
           // Member since
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -194,9 +190,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               ],
             ),
-          )
-              .animate()
-              .fadeIn(delay: 200.ms, duration: 400.ms),
+          ).animate().fadeIn(delay: 200.ms, duration: 400.ms),
         ],
       ),
     );
@@ -465,9 +459,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ],
         ),
       ),
-    )
-        .animate()
-        .fadeIn(delay: 500.ms, duration: 400.ms);
+    ).animate().fadeIn(delay: 500.ms, duration: 400.ms);
   }
 
   Widget _buildAppVersion() {
@@ -477,9 +469,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         fontSize: 13,
         color: AppColors.textMuted,
       ),
-    )
-        .animate()
-        .fadeIn(delay: 600.ms, duration: 400.ms);
+    ).animate().fadeIn(delay: 600.ms, duration: 400.ms);
   }
 
   void _confirmSignOut() {
@@ -512,7 +502,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void _showEditProfileSheet() {
     final user = AuthService.instance.currentUser;
     final nameController = TextEditingController(text: user?.name ?? '');
-    
+
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
@@ -549,7 +539,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ),
             const SizedBox(height: 24),
-            
+
             const Text(
               'Edit Profile',
               style: TextStyle(
@@ -559,14 +549,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ),
             const SizedBox(height: 20),
-            
+
             // Name field
             TextField(
               controller: nameController,
               decoration: InputDecoration(
                 labelText: 'Full Name',
                 labelStyle: const TextStyle(color: AppColors.textMuted),
-                prefixIcon: const Icon(Icons.person_outline, color: AppColors.textMuted),
+                prefixIcon: const Icon(
+                  Icons.person_outline,
+                  color: AppColors.textMuted,
+                ),
                 filled: true,
                 fillColor: AppColors.surfaceLight,
                 border: OutlineInputBorder(
@@ -585,7 +578,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               style: const TextStyle(color: AppColors.textPrimary),
             ),
             const SizedBox(height: 24),
-            
+
             // Save button
             SizedBox(
               width: double.infinity,
@@ -623,8 +616,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   String _formatDate(DateTime date) {
     final months = [
-      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
     ];
     return '${months[date.month - 1]} ${date.year}';
   }

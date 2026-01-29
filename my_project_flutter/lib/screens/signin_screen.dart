@@ -23,7 +23,7 @@ class _SignInScreenState extends State<SignInScreen> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  
+
   bool _isLoading = false;
   bool _obscurePassword = true;
   bool _rememberMe = false;
@@ -66,7 +66,7 @@ class _SignInScreenState extends State<SignInScreen> {
         password: _passwordController.text,
         rememberMe: _rememberMe,
       );
-      
+
       if (mounted) {
         widget.onSignInSuccess();
       }
@@ -147,43 +147,43 @@ class _SignInScreenState extends State<SignInScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(height: 60),
-                  
+
                   // Logo and title
                   _buildHeader(),
-                  
+
                   const SizedBox(height: 48),
-                  
+
                   // Sign in form
                   _buildSignInForm(),
-                  
+
                   const SizedBox(height: 16),
-                  
+
                   // Remember me & Forgot password
                   _buildOptions(),
-                  
+
                   const SizedBox(height: 24),
-                  
+
                   // Error message
                   if (_errorMessage != null) _buildErrorMessage(),
-                  
+
                   // Sign in button
                   _buildSignInButton(),
-                  
+
                   const SizedBox(height: 32),
-                  
+
                   // Divider
                   _buildDivider(),
-                  
+
                   const SizedBox(height: 32),
-                  
+
                   // Social buttons
                   _buildSocialButtons(),
-                  
+
                   const SizedBox(height: 40),
-                  
+
                   // Navigate to Sign Up
                   _buildSignUpLink(),
-                  
+
                   const SizedBox(height: 40),
                 ],
               ),
@@ -200,51 +200,51 @@ class _SignInScreenState extends State<SignInScreen> {
       children: [
         // App logo with glow
         Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            gradient: AppGradients.primaryGradient,
-            borderRadius: BorderRadius.circular(20),
-            boxShadow: [
-              BoxShadow(
-                color: AppColors.primary.withValues(alpha: 0.4),
-                blurRadius: 20,
-                offset: const Offset(0, 8),
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                gradient: AppGradients.primaryGradient,
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: AppColors.primary.withValues(alpha: 0.4),
+                    blurRadius: 20,
+                    offset: const Offset(0, 8),
+                  ),
+                ],
               ),
-            ],
-          ),
-          child: const Icon(
-            Icons.auto_awesome,
-            size: 36,
-            color: Colors.white,
-          ),
-        )
+              child: const Icon(
+                Icons.auto_awesome,
+                size: 36,
+                color: Colors.white,
+              ),
+            )
             .animate()
             .fadeIn(duration: 600.ms)
             .scale(begin: const Offset(0.5, 0.5)),
-        
+
         const SizedBox(height: 32),
-        
+
         const Text(
-          'Welcome Back',
-          style: TextStyle(
-            fontSize: 32,
-            fontWeight: FontWeight.bold,
-            color: AppColors.textPrimary,
-          ),
-        )
+              'Welcome Back',
+              style: TextStyle(
+                fontSize: 32,
+                fontWeight: FontWeight.bold,
+                color: AppColors.textPrimary,
+              ),
+            )
             .animate()
             .fadeIn(delay: 200.ms, duration: 500.ms)
             .slideX(begin: -0.1, end: 0),
-        
+
         const SizedBox(height: 8),
-        
+
         const Text(
-          'Sign in to continue your productivity journey',
-          style: TextStyle(
-            fontSize: 16,
-            color: AppColors.textSecondary,
-          ),
-        )
+              'Sign in to continue your productivity journey',
+              style: TextStyle(
+                fontSize: 16,
+                color: AppColors.textSecondary,
+              ),
+            )
             .animate()
             .fadeIn(delay: 300.ms, duration: 500.ms)
             .slideX(begin: -0.1, end: 0),
@@ -272,9 +272,9 @@ class _SignInScreenState extends State<SignInScreen> {
           },
           delay: 400,
         ),
-        
+
         const SizedBox(height: 16),
-        
+
         // Password field
         _buildTextField(
           controller: _passwordController,
@@ -286,7 +286,8 @@ class _SignInScreenState extends State<SignInScreen> {
               _obscurePassword ? Icons.visibility_off : Icons.visibility,
               color: AppColors.textMuted,
             ),
-            onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
+            onPressed: () =>
+                setState(() => _obscurePassword = !_obscurePassword),
           ),
           validator: (value) {
             if (value == null || value.isEmpty) {
@@ -311,38 +312,41 @@ class _SignInScreenState extends State<SignInScreen> {
     int delay = 0,
   }) {
     return TextFormField(
-      controller: controller,
-      keyboardType: keyboardType,
-      obscureText: obscureText,
-      validator: validator,
-      style: const TextStyle(color: AppColors.textPrimary),
-      decoration: InputDecoration(
-        labelText: label,
-        labelStyle: const TextStyle(color: AppColors.textMuted),
-        prefixIcon: Icon(icon, color: AppColors.textMuted),
-        suffixIcon: suffixIcon,
-        filled: true,
-        fillColor: AppColors.surface,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16),
-          borderSide: const BorderSide(color: AppColors.glassBorder),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16),
-          borderSide: const BorderSide(color: AppColors.glassBorder),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16),
-          borderSide: const BorderSide(color: AppColors.primary, width: 2),
-        ),
-        errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16),
-          borderSide: const BorderSide(color: AppColors.error),
-        ),
-      ),
-    )
+          controller: controller,
+          keyboardType: keyboardType,
+          obscureText: obscureText,
+          validator: validator,
+          style: const TextStyle(color: AppColors.textPrimary),
+          decoration: InputDecoration(
+            labelText: label,
+            labelStyle: const TextStyle(color: AppColors.textMuted),
+            prefixIcon: Icon(icon, color: AppColors.textMuted),
+            suffixIcon: suffixIcon,
+            filled: true,
+            fillColor: AppColors.surface,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(16),
+              borderSide: const BorderSide(color: AppColors.glassBorder),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(16),
+              borderSide: const BorderSide(color: AppColors.glassBorder),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(16),
+              borderSide: const BorderSide(color: AppColors.primary, width: 2),
+            ),
+            errorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(16),
+              borderSide: const BorderSide(color: AppColors.error),
+            ),
+          ),
+        )
         .animate()
-        .fadeIn(delay: Duration(milliseconds: delay), duration: 400.ms)
+        .fadeIn(
+          delay: Duration(milliseconds: delay),
+          duration: 400.ms,
+        )
         .slideY(begin: 0.1, end: 0);
   }
 
@@ -355,7 +359,8 @@ class _SignInScreenState extends State<SignInScreen> {
           children: [
             Checkbox(
               value: _rememberMe,
-              onChanged: (value) => setState(() => _rememberMe = value ?? false),
+              onChanged: (value) =>
+                  setState(() => _rememberMe = value ?? false),
               activeColor: AppColors.primary,
               side: const BorderSide(color: AppColors.textMuted),
             ),
@@ -371,7 +376,7 @@ class _SignInScreenState extends State<SignInScreen> {
             ),
           ],
         ),
-        
+
         // Forgot password
         TextButton(
           onPressed: () {
@@ -381,7 +386,9 @@ class _SignInScreenState extends State<SignInScreen> {
                 content: const Text('Password reset email sent!'),
                 backgroundColor: AppColors.primary,
                 behavior: SnackBarBehavior.floating,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
               ),
             );
           },
@@ -395,9 +402,7 @@ class _SignInScreenState extends State<SignInScreen> {
           ),
         ),
       ],
-    )
-        .animate()
-        .fadeIn(delay: 600.ms, duration: 400.ms);
+    ).animate().fadeIn(delay: 600.ms, duration: 400.ms);
   }
 
   Widget _buildErrorMessage() {
@@ -426,14 +431,14 @@ class _SignInScreenState extends State<SignInScreen> {
 
   Widget _buildSignInButton() {
     return SizedBox(
-      width: double.infinity,
-      child: GradientButton(
-        text: _isLoading ? 'Signing In...' : 'Sign In',
-        onPressed: _isLoading ? null : _handleSignIn,
-        icon: _isLoading ? null : Icons.arrow_forward,
-        height: 56,
-      ),
-    )
+          width: double.infinity,
+          child: GradientButton(
+            text: _isLoading ? 'Signing In...' : 'Sign In',
+            onPressed: _isLoading ? null : _handleSignIn,
+            icon: _isLoading ? null : Icons.arrow_forward,
+            height: 56,
+          ),
+        )
         .animate()
         .fadeIn(delay: 700.ms, duration: 400.ms)
         .slideY(begin: 0.2, end: 0);
@@ -455,34 +460,32 @@ class _SignInScreenState extends State<SignInScreen> {
         ),
         Expanded(child: Divider(color: AppColors.glassBorder)),
       ],
-    )
-        .animate()
-        .fadeIn(delay: 800.ms, duration: 400.ms);
+    ).animate().fadeIn(delay: 800.ms, duration: 400.ms);
   }
 
   Widget _buildSocialButtons() {
     return Row(
-      children: [
-        Expanded(
-          child: _buildSocialButton(
-            icon: 'G',
-            label: 'Google',
-            onTap: _handleGoogleSignIn,
-            color: Colors.red,
-          ),
-        ),
-        const SizedBox(width: 16),
-        Expanded(
-          child: _buildSocialButton(
-            icon: '',
-            label: 'Apple',
-            onTap: _handleAppleSignIn,
-            color: Colors.white,
-            isApple: true,
-          ),
-        ),
-      ],
-    )
+          children: [
+            Expanded(
+              child: _buildSocialButton(
+                icon: 'G',
+                label: 'Google',
+                onTap: _handleGoogleSignIn,
+                color: Colors.red,
+              ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: _buildSocialButton(
+                icon: '',
+                label: 'Apple',
+                onTap: _handleAppleSignIn,
+                color: Colors.white,
+                isApple: true,
+              ),
+            ),
+          ],
+        )
         .animate()
         .fadeIn(delay: 900.ms, duration: 400.ms)
         .slideY(begin: 0.1, end: 0);
@@ -556,8 +559,6 @@ class _SignInScreenState extends State<SignInScreen> {
           ),
         ),
       ),
-    )
-        .animate()
-        .fadeIn(delay: 1000.ms, duration: 400.ms);
+    ).animate().fadeIn(delay: 1000.ms, duration: 400.ms);
   }
 }

@@ -4,38 +4,38 @@ import 'package:google_fonts/google_fonts.dart';
 /// Premium color palette for LifeSync AI Butler
 class AppColors {
   // Primary gradient colors - Deep purple to vibrant blue
-  static const Color primaryStart = Color(0xFF6366F1);  // Indigo
-  static const Color primaryEnd = Color(0xFF8B5CF6);    // Purple
-  static const Color primary = Color(0xFF7C3AED);       // Violet
-  
+  static const Color primaryStart = Color(0xFF6366F1); // Indigo
+  static const Color primaryEnd = Color(0xFF8B5CF6); // Purple
+  static const Color primary = Color(0xFF7C3AED); // Violet
+
   // Accent colors
-  static const Color accent = Color(0xFF06B6D4);        // Cyan
-  static const Color accentLight = Color(0xFF22D3EE);   // Light Cyan
-  
+  static const Color accent = Color(0xFF06B6D4); // Cyan
+  static const Color accentLight = Color(0xFF22D3EE); // Light Cyan
+
   // Success, Warning, Error
-  static const Color success = Color(0xFF10B981);       // Emerald
-  static const Color warning = Color(0xFFF59E0B);       // Amber
-  static const Color error = Color(0xFFEF4444);         // Red
-  
+  static const Color success = Color(0xFF10B981); // Emerald
+  static const Color warning = Color(0xFFF59E0B); // Amber
+  static const Color error = Color(0xFFEF4444); // Red
+
   // Neutral palette - Dark theme
-  static const Color background = Color(0xFF0F0F23);    // Deep dark blue
-  static const Color surface = Color(0xFF1A1A2E);       // Dark surface
-  static const Color surfaceLight = Color(0xFF252542);  // Elevated surface
-  static const Color cardBg = Color(0xFF16162A);        // Card background
-  
+  static const Color background = Color(0xFF0F0F23); // Deep dark blue
+  static const Color surface = Color(0xFF1A1A2E); // Dark surface
+  static const Color surfaceLight = Color(0xFF252542); // Elevated surface
+  static const Color cardBg = Color(0xFF16162A); // Card background
+
   // Text colors
-  static const Color textPrimary = Color(0xFFF8FAFC);   // Almost white
+  static const Color textPrimary = Color(0xFFF8FAFC); // Almost white
   static const Color textSecondary = Color(0xFF94A3B8); // Slate
-  static const Color textMuted = Color(0xFF64748B);     // Muted slate
-  
+  static const Color textMuted = Color(0xFF64748B); // Muted slate
+
   // Glass effect overlay
   static const Color glass = Color(0x1AFFFFFF);
   static const Color glassBorder = Color(0x33FFFFFF);
-  
+
   // Priority colors
-  static const Color priorityLow = Color(0xFF3B82F6);    // Blue
+  static const Color priorityLow = Color(0xFF3B82F6); // Blue
   static const Color priorityMedium = Color(0xFFF59E0B); // Amber
-  static const Color priorityHigh = Color(0xFFEF4444);   // Red
+  static const Color priorityHigh = Color(0xFFEF4444); // Red
   static const Color priorityUrgent = Color(0xFFDC2626); // Dark red
 }
 
@@ -46,19 +46,19 @@ class AppGradients {
     end: Alignment.bottomRight,
     colors: [AppColors.primaryStart, AppColors.primaryEnd],
   );
-  
+
   static const accentGradient = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
     colors: [AppColors.accent, AppColors.accentLight],
   );
-  
+
   static const cardGradient = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
     colors: [AppColors.surface, AppColors.cardBg],
   );
-  
+
   static const backgroundGradient = LinearGradient(
     begin: Alignment.topCenter,
     end: Alignment.bottomCenter,
@@ -68,7 +68,7 @@ class AppGradients {
       Color(0xFF16162A),
     ],
   );
-  
+
   static const shimmerGradient = LinearGradient(
     colors: [
       Color(0x1AFFFFFF),
@@ -85,7 +85,7 @@ class AppTheme {
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.dark,
-      
+
       // Color scheme
       colorScheme: const ColorScheme.dark(
         primary: AppColors.primary,
@@ -97,10 +97,10 @@ class AppTheme {
         onSurface: AppColors.textPrimary,
         onError: AppColors.textPrimary,
       ),
-      
+
       // Scaffold
       scaffoldBackgroundColor: AppColors.background,
-      
+
       // AppBar
       appBarTheme: AppBarTheme(
         backgroundColor: Colors.transparent,
@@ -113,7 +113,7 @@ class AppTheme {
         ),
         iconTheme: const IconThemeData(color: AppColors.textPrimary),
       ),
-      
+
       // Cards
       cardTheme: CardThemeData(
         color: AppColors.surface,
@@ -123,7 +123,7 @@ class AppTheme {
           side: const BorderSide(color: AppColors.glassBorder, width: 1),
         ),
       ),
-      
+
       // Text theme
       textTheme: GoogleFonts.outfitTextTheme(
         const TextTheme(
@@ -174,7 +174,7 @@ class AppTheme {
           labelSmall: TextStyle(color: AppColors.textMuted),
         ),
       ),
-      
+
       // Buttons
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
@@ -191,7 +191,7 @@ class AppTheme {
           ),
         ),
       ),
-      
+
       // Input decoration
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
@@ -208,10 +208,13 @@ class AppTheme {
           borderRadius: BorderRadius.circular(16),
           borderSide: const BorderSide(color: AppColors.primary, width: 2),
         ),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 20,
+          vertical: 18,
+        ),
         hintStyle: const TextStyle(color: AppColors.textMuted),
       ),
-      
+
       // Bottom Navigation
       bottomNavigationBarTheme: const BottomNavigationBarThemeData(
         backgroundColor: AppColors.surface,
@@ -220,7 +223,7 @@ class AppTheme {
         type: BottomNavigationBarType.fixed,
         elevation: 0,
       ),
-      
+
       // Floating Action Button
       floatingActionButtonTheme: const FloatingActionButtonThemeData(
         backgroundColor: AppColors.primary,
@@ -228,13 +231,13 @@ class AppTheme {
         elevation: 8,
         shape: CircleBorder(),
       ),
-      
+
       // Divider
       dividerTheme: const DividerThemeData(
         color: AppColors.glassBorder,
         thickness: 1,
       ),
-      
+
       // Icon theme
       iconTheme: const IconThemeData(
         color: AppColors.textSecondary,
