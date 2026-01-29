@@ -1,0 +1,25 @@
+### Task model for LifeSync AI Butler - Task/Todo management
+class: Task
+table: tasks
+fields:
+  userId: int
+  title: String
+  description: String?
+  dueDate: DateTime?
+  priority: String, default="'medium'"   # low, medium, high, urgent
+  status: String, default="'pending'"    # pending, in_progress, completed, cancelled
+  category: String?                      # work, personal, health, finance, etc.
+  isRecurring: bool, default=false
+  recurrenceRule: String?               # RRULE format for recurring tasks
+  reminderAt: DateTime?
+  completedAt: DateTime?
+  aiSuggested: bool, default=false      # Was this created by AI?
+  createdAt: DateTime
+
+indexes:
+  task_user_idx:
+    fields: userId
+  task_due_date_idx:
+    fields: dueDate
+  task_status_idx:
+    fields: status

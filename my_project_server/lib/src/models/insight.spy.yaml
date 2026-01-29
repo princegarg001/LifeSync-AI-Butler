@@ -1,0 +1,21 @@
+### AI-generated insights and predictions
+class: Insight
+table: insights
+fields:
+  userId: int
+  type: String           # productivity, health, reminder, suggestion, warning
+  title: String
+  message: String
+  priority: int, default=0   # 0=low, 1=medium, 2=high
+  iconName: String?      # Flutter icon name for display
+  actionType: String?    # task, navigate, dismiss, external
+  actionData: String?    # JSON data for action execution
+  isDismissed: bool, default=false
+  expiresAt: DateTime?
+  generatedAt: DateTime
+
+indexes:
+  insight_user_idx:
+    fields: userId
+  insight_dismissed_idx:
+    fields: isDismissed

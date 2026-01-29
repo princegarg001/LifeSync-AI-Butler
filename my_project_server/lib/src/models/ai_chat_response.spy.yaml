@@ -1,0 +1,8 @@
+### AI Chat response DTO
+class: AiChatResponse
+fields:
+  message: String
+  intentType: String?        # schedule, reminder, query, action, greeting
+  suggestedActions: List<String>?  # Quick reply buttons
+  createdTask: Task?         # If AI created a task
+  error: String?

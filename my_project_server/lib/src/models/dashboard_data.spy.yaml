@@ -1,0 +1,13 @@
+### Dashboard data transfer object (DTO) - Not stored in database
+class: DashboardData
+fields:
+  userName: String
+  greeting: String
+  todayTaskCount: int
+  completedTodayCount: int
+  upcomingTaskCount: int
+  overdueTaskCount: int
+  productivityScore: int        # 0-100
+  currentStreak: int            # Days of completed tasks
+  recentInsights: List<Insight>
+  upcomingTasks: List<Task>

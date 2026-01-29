@@ -1,0 +1,16 @@
+### Chat message model for AI conversation history
+class: ChatMessage
+table: chat_messages
+fields:
+  userId: int
+  role: String           # user, assistant, system
+  content: String
+  intentType: String?    # schedule, reminder, query, action, greeting
+  metadata: String?      # JSON for additional context data
+  timestamp: DateTime
+
+indexes:
+  chat_user_idx:
+    fields: userId
+  chat_timestamp_idx:
+    fields: timestamp

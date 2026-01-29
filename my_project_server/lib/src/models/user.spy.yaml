@@ -1,0 +1,16 @@
+### This file defines the User model for LifeSync AI Butler
+class: User
+table: users
+fields:
+  email: String
+  name: String
+  avatarUrl: String?
+  timezone: String?, default="'UTC'"
+  notificationsEnabled: bool?, default=true
+  lastActiveAt: DateTime?
+  createdAt: DateTime
+
+indexes:
+  user_email_idx:
+    fields: email
+    unique: true
