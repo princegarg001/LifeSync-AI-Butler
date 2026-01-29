@@ -3,6 +3,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import '../theme/app_theme.dart';
 import '../widgets/premium_widgets.dart';
 import '../services/api_service.dart';
+import '../services/auth_service.dart';
 
 /// World-class Dashboard Screen for LifeSync AI Butler
 class DashboardScreen extends StatefulWidget {
@@ -17,7 +18,8 @@ class DashboardScreen extends StatefulWidget {
 class _DashboardScreenState extends State<DashboardScreen> {
   final ApiService _api = ApiService.instance;
   
-  String userName = 'User';
+  String get userName => AuthService.instance.currentUser?.firstName ?? 'User';
+  String get userInitials => AuthService.instance.currentUser?.initials ?? 'U';
   int productivityScore = 78;
   int tasksToday = 0;
   int tasksCompleted = 0;
@@ -176,7 +178,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ),
           ),
           
-          // Profile avatar with glow
+          // Profile avatar with glow  
           Container(
             padding: const EdgeInsets.all(3),
             decoration: BoxDecoration(
@@ -190,10 +192,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ),
               ],
             ),
-            child: const CircleAvatar(
+            child: CircleAvatar(
               radius: 26,
               backgroundColor: AppColors.surface,
-              child: Icon(Icons.person, color: AppColors.textPrimary, size: 28),
+              child: Text(
+                userInitials,
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.textPrimary,
+                ),
+              ),
             ),
           )
               .animate()

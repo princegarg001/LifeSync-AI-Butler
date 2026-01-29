@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'theme/app_theme.dart';
-import 'screens/login_screen.dart';
+import 'screens/signup_screen.dart';
+import 'screens/signin_screen.dart';
 import 'screens/dashboard_screen.dart';
-import 'screens/chat_screen.dart';
 import 'screens/tasks_screen.dart';
+import 'screens/chat_screen.dart';
 import 'screens/insights_screen.dart';
 import 'screens/voice_butler_screen.dart';
-import 'services/api_service.dart';
+import 'screens/profile_screen.dart';
+import 'services/auth_service.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(const LifeSyncApp());
 }
 
-/// LifeSync AI Butler - Main Application
 class LifeSyncApp extends StatelessWidget {
   const LifeSyncApp({super.key});
 
@@ -23,13 +24,23 @@ class LifeSyncApp extends StatelessWidget {
     return MaterialApp(
       title: 'LifeSync AI Butler',
       debugShowCheckedModeBanner: false,
-      theme: AppTheme.darkTheme,
+      theme: ThemeData(
+        useMaterial3: true,
+        brightness: Brightness.dark,
+        scaffoldBackgroundColor: AppColors.background,
+        textTheme: GoogleFonts.interTextTheme(ThemeData.dark().textTheme),
+        colorScheme: ColorScheme.dark(
+          primary: AppColors.primary,
+          secondary: AppColors.accent,
+          surface: AppColors.surface,
+        ),
+      ),
       home: const AuthWrapper(),
     );
   }
 }
 
-/// Authentication wrapper to handle login state
+/// Authentication wrapper that manages the auth flow
 class AuthWrapper extends StatefulWidget {
   const AuthWrapper({super.key});
 
@@ -38,43 +49,81 @@ class AuthWrapper extends StatefulWidget {
 }
 
 class _AuthWrapperState extends State<AuthWrapper> {
-  bool _isAuthenticated = false;
-  int _currentUserId = 1; // Default user ID for demo
-
-  void _handleLogin() {
-    setState(() {
-      _isAuthenticated = true;
-    });
+  AuthScreen _currentScreen = AuthScreen.signUp;
+  
+  @override
+  void initState() {
+    super.initState();
+    _checkAuthStatus();
   }
-
-  void _handleLogout() {
-    setState(() {
-      _isAuthenticated = false;
-    });
+  
+  Future<void> _checkAuthStatus() async {
+    final isAuthenticated = await AuthService.instance.checkAuthStatus();
+    if (isAuthenticated && mounted) {
+      setState(() {
+        _currentScreen = AuthScreen.main;
+      });
+    }
+  }
+  
+  void _navigateToSignIn() {
+    setState(() => _currentScreen = AuthScreen.signIn);
+  }
+  
+  void _navigateToSignUp() {
+    setState(() => _currentScreen = AuthScreen.signUp);
+  }
+  
+  void _onSignUpSuccess() {
+    // After sign up, go to sign in
+    setState(() => _currentScreen = AuthScreen.signIn);
+    
+    // Show success message
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: const Text('Account created successfully! Please sign in.'),
+        backgroundColor: AppColors.success,
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      ),
+    );
+  }
+  
+  void _onSignInSuccess() {
+    setState(() => _currentScreen = AuthScreen.main);
+  }
+  
+  void _onSignOut() {
+    AuthService.instance.signOut();
+    setState(() => _currentScreen = AuthScreen.signUp);
   }
 
   @override
   Widget build(BuildContext context) {
-    if (!_isAuthenticated) {
-      return LoginScreen(onLoginSuccess: _handleLogin);
+    switch (_currentScreen) {
+      case AuthScreen.signUp:
+        return SignUpScreen(
+          onSignUpSuccess: _onSignUpSuccess,
+          onNavigateToSignIn: _navigateToSignIn,
+        );
+      case AuthScreen.signIn:
+        return SignInScreen(
+          onSignInSuccess: _onSignInSuccess,
+          onNavigateToSignUp: _navigateToSignUp,
+        );
+      case AuthScreen.main:
+        return MainNavigationScreen(onSignOut: _onSignOut);
     }
-    return MainNavigationScreen(
-      userId: _currentUserId,
-      onLogout: _handleLogout,
-    );
   }
 }
 
-/// Main navigation screen with bottom nav bar
-class MainNavigationScreen extends StatefulWidget {
-  final int userId;
-  final VoidCallback onLogout;
+enum AuthScreen { signUp, signIn, main }
 
-  const MainNavigationScreen({
-    super.key,
-    required this.userId,
-    required this.onLogout,
-  });
+/// Main navigation with bottom nav bar
+class MainNavigationScreen extends StatefulWidget {
+  final VoidCallback onSignOut;
+  
+  const MainNavigationScreen({super.key, required this.onSignOut});
 
   @override
   State<MainNavigationScreen> createState() => _MainNavigationScreenState();
@@ -82,14 +131,16 @@ class MainNavigationScreen extends StatefulWidget {
 
 class _MainNavigationScreenState extends State<MainNavigationScreen> {
   int _currentIndex = 0;
+  
+  int get _userId => AuthService.instance.currentUser?.id ?? 1;
 
   @override
   Widget build(BuildContext context) {
     final screens = [
-      DashboardScreen(userId: widget.userId),
-      TasksScreen(userId: widget.userId),
-      ChatScreen(userId: widget.userId),
-      InsightsScreen(userId: widget.userId),
+      DashboardScreen(userId: _userId),
+      TasksScreen(userId: _userId),
+      ChatScreen(userId: _userId),
+      InsightsScreen(userId: _userId),
     ];
 
     return Scaffold(
@@ -106,34 +157,34 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
 
   Widget _buildVoiceButlerFab() {
     return Container(
-      margin: const EdgeInsets.only(bottom: 80),
+      margin: const EdgeInsets.only(bottom: 60),
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        gradient: AppGradients.accentGradient,
+        gradient: AppGradients.primaryGradient,
         boxShadow: [
           BoxShadow(
-            color: AppColors.accent.withValues(alpha: 0.5),
+            color: AppColors.primary.withValues(alpha: 0.5),
             blurRadius: 20,
             spreadRadius: 2,
-            offset: const Offset(0, 4),
           ),
         ],
       ),
       child: FloatingActionButton(
+        heroTag: 'voiceButlerFab',
         onPressed: () {
-          Navigator.push(
-            context,
+          Navigator.of(context).push(
             PageRouteBuilder(
               pageBuilder: (context, animation, secondaryAnimation) =>
-                  VoiceButlerScreen(userId: widget.userId),
+                  VoiceButlerScreen(userId: _userId),
               transitionsBuilder: (context, animation, secondaryAnimation, child) {
                 return ScaleTransition(
-                  scale: Tween<double>(begin: 0.0, end: 1.0).animate(
+                  scale: Tween<double>(begin: 0.8, end: 1.0).animate(
                     CurvedAnimation(parent: animation, curve: Curves.easeOutBack),
                   ),
-                  child: child,
+                  child: FadeTransition(opacity: animation, child: child),
                 );
               },
+              transitionDuration: const Duration(milliseconds: 400),
             ),
           );
         },
@@ -141,97 +192,49 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
         elevation: 0,
         child: const Icon(Icons.mic, color: Colors.white, size: 28),
       ),
-    )
-        .animate(onComplete: (c) => c.repeat(reverse: true))
-        .scale(
-          begin: const Offset(1, 1),
-          end: const Offset(1.08, 1.08),
-          duration: 1500.ms,
-          curve: Curves.easeInOut,
-        );
+    );
   }
 
   Widget _buildBottomNavBar() {
     return Container(
-      margin: const EdgeInsets.fromLTRB(16, 0, 16, 16),
       decoration: BoxDecoration(
-        color: AppColors.surface.withValues(alpha: 0.9),
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: AppColors.glassBorder),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.3),
-            blurRadius: 20,
-            offset: const Offset(0, 8),
-          ),
-        ],
+        color: AppColors.surface.withValues(alpha: 0.95),
+        border: const Border(top: BorderSide(color: AppColors.glassBorder)),
       ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(24),
+      child: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              _buildNavItem(0, Icons.dashboard_rounded, 'Home'),
-              _buildNavItem(1, Icons.task_alt_rounded, 'Tasks'),
-              _buildNavItem(2, Icons.auto_awesome, 'AI Chat', isCenter: true),
-              _buildNavItem(3, Icons.insights_rounded, 'Insights'),
+              _buildNavItem(0, Icons.dashboard_outlined, Icons.dashboard, 'Home'),
+              _buildNavItem(1, Icons.task_alt_outlined, Icons.task_alt, 'Tasks'),
+              _buildNavItem(2, Icons.chat_bubble_outline, Icons.chat_bubble, 'Chat'),
+              _buildNavItem(3, Icons.insights_outlined, Icons.insights, 'Insights'),
+              _buildProfileItem(),
             ],
           ),
         ),
       ),
-    )
-        .animate()
-        .fadeIn(delay: 500.ms, duration: 400.ms)
-        .slideY(begin: 0.3, end: 0);
+    );
   }
 
-  Widget _buildNavItem(int index, IconData icon, String label, {bool isCenter = false}) {
+  Widget _buildNavItem(int index, IconData icon, IconData activeIcon, String label) {
     final isSelected = _currentIndex == index;
-    
-    if (isCenter) {
-      return GestureDetector(
-        onTap: () => setState(() => _currentIndex = index),
-        child: Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            gradient: isSelected ? AppGradients.primaryGradient : null,
-            color: isSelected ? null : AppColors.surfaceLight,
-            borderRadius: BorderRadius.circular(18),
-            boxShadow: isSelected
-                ? [
-                    BoxShadow(
-                      color: AppColors.primary.withValues(alpha: 0.4),
-                      blurRadius: 16,
-                      offset: const Offset(0, 4),
-                    ),
-                  ]
-                : null,
-          ),
-          child: Icon(
-            icon,
-            color: isSelected ? Colors.white : AppColors.textMuted,
-            size: 26,
-          ),
-        ),
-      );
-    }
-    
     return GestureDetector(
       onTap: () => setState(() => _currentIndex = index),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
           color: isSelected ? AppColors.primary.withValues(alpha: 0.15) : Colors.transparent,
-          borderRadius: BorderRadius.circular(14),
+          borderRadius: BorderRadius.circular(12),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(
-              icon,
+              isSelected ? activeIcon : icon,
               color: isSelected ? AppColors.primary : AppColors.textMuted,
               size: 24,
             ),
@@ -240,8 +243,57 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
               label,
               style: TextStyle(
                 fontSize: 11,
-                fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
+                fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
                 color: isSelected ? AppColors.primary : AppColors.textMuted,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildProfileItem() {
+    final user = AuthService.instance.currentUser;
+    
+    return GestureDetector(
+      onTap: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => ProfileScreen(onSignOut: widget.onSignOut),
+          ),
+        );
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 28,
+              height: 28,
+              decoration: BoxDecoration(
+                gradient: AppGradients.primaryGradient,
+                shape: BoxShape.circle,
+                border: Border.all(color: AppColors.primary, width: 2),
+              ),
+              child: Center(
+                child: Text(
+                  user?.initials ?? 'U',
+                  style: const TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 4),
+            const Text(
+              'Profile',
+              style: TextStyle(
+                fontSize: 11,
+                color: AppColors.textMuted,
               ),
             ),
           ],

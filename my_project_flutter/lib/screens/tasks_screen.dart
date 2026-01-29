@@ -293,6 +293,7 @@ class _TasksScreenState extends State<TasksScreen> with SingleTickerProviderStat
         ],
       ),
       child: FloatingActionButton.extended(
+        heroTag: 'createTaskFab',
         onPressed: () => _showCreateTaskSheet(),
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -443,8 +444,52 @@ class _TasksScreenState extends State<TasksScreen> with SingleTickerProviderStat
                   text: 'Create Task',
                   icon: Icons.add,
                   onPressed: () async {
-                    if (titleController.text.isNotEmpty) {
-                      // Add locally
+                    if (titleController.text.isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: const Text('Please enter a task title'),
+                          backgroundColor: AppColors.error,
+                          behavior: SnackBarBehavior.floating,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                        ),
+                      );
+                      return;
+                    }
+                    
+                    Navigator.pop(context);
+                    
+                    // Try to create on backend first
+                    try {
+                      final createdTask = await _api.createTask(
+                        userId: widget.userId,
+                        title: titleController.text,
+                        priority: selectedPriority,
+                        dueDate: DateTime.now(),
+                      );
+                      
+                      // Add to local list with backend ID
+                      setState(() {
+                        _tasks.insert(0, _MockTask(
+                          createdTask.title,
+                          createdTask.priority,
+                          createdTask.dueDate ?? DateTime.now(),
+                          false,
+                          id: createdTask.id,
+                        ));
+                      });
+                      
+                      if (mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: const Text('Task created successfully!'),
+                            backgroundColor: AppColors.success,
+                            behavior: SnackBarBehavior.floating,
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                          ),
+                        );
+                      }
+                    } catch (e) {
+                      // Backend failed, add locally
                       setState(() {
                         _tasks.insert(0, _MockTask(
                           titleController.text,
@@ -454,18 +499,16 @@ class _TasksScreenState extends State<TasksScreen> with SingleTickerProviderStat
                         ));
                       });
                       
-                      // Try to create on backend
-                      try {
-                        await _api.createTask(
-                          userId: widget.userId,
-                          title: titleController.text,
-                          priority: selectedPriority,
+                      if (mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: const Text('Task saved locally (offline mode)'),
+                            backgroundColor: AppColors.warning,
+                            behavior: SnackBarBehavior.floating,
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                          ),
                         );
-                      } catch (e) {
-                        // Ignore backend errors
                       }
-                      
-                      Navigator.pop(context);
                     }
                   },
                 ),
