@@ -1,6 +1,9 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:logging/logging.dart';
 import '../generated/protocol.dart';
+
+final _logger = Logger('GeminiService');
 
 /// GeminiService handles all AI interactions using Google's Gemini API.
 class GeminiService {
@@ -27,7 +30,7 @@ class GeminiService {
       final response = await _callGeminiApi(message, conversationHistory);
       return _parseGeminiResponse(response, userId);
     } catch (e) {
-      print('Gemini API error: $e');
+      _logger.severe('Gemini API error: $e');
       return _getMockResponse(message, userId);
     }
   }
@@ -110,7 +113,7 @@ Be friendly and concise. Current time: ${DateTime.now().toIso8601String()}
           createdAt: DateTime.now(),
         );
       } catch (e) {
-        print('Error parsing task JSON: $e');
+        _logger.warning('Error parsing task JSON: $e');
       }
     } else if (response.toLowerCase().contains('schedule') ||
         response.toLowerCase().contains('task')) {
